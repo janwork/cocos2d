@@ -3,10 +3,10 @@
 
 #include "cocos2d.h"
 
-
+// ÅÆÖµ
 enum PokeNum
 {
-	NUM_3 = 0;
+	NUM_3 = 0,
 	NUM_4,
 	NUM_5,
 	NUM_6,
@@ -22,6 +22,8 @@ enum PokeNum
 	NUM_DW
 };
 
+
+// »¨É«
 enum PokeTag{
 	FANGKUAI = 0,
 	MEIHUI,
@@ -37,7 +39,7 @@ struct PokeInfo
 
 	inline bool operator ==(const PokeInfo &pi) const
 	{
-		return (this->_num == pi._num && this->_tag == pi_tag);
+		return (this->_num == pi._num && this->_tag == pi._tag);
 	}
 };
 

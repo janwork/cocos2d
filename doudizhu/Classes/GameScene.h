@@ -7,7 +7,7 @@
 
 USING_NS_CC;
 
-class SceneGame : public Layer {
+class GameScene : public Layer {
 public :
 	static Scene* createScene();
 
@@ -50,7 +50,7 @@ public :
 
 	Array* getArrPlayerOut() { return  _arrPlayerOut; }
 
-	CREATE_FUNC(SceneGame);
+	CREATE_FUNC(GameScene);
 
 public:
 	Player* _player1;
@@ -59,26 +59,21 @@ public:
 
 protected:
 
-	//std::vector<PokeInfo> _vecDiPai;
+	std::vector<PokeInfo> _vecDiPai;
 
-	//BottomCardZone* _bottomCardZone;
+	BottomCardZone* _bottomCardZone;
 
 	Menu* _menuBack;
-
 	Menu* _menuChuPai;
-
 	Menu* _menuQiangDiZhu;
-
 	Menu* _menuReady;
 
 
 	int _state;
-
 	bool _gameover;
-
 	bool _begin;
 
-	//std::vector<PokeInfo> _pokeInfo;
+	std::vector<PokeInfo> _pokeInfo;
 
 	Array* _arrPlayerOut;
 
