@@ -45,6 +45,28 @@ bool  GameScene::init(){
 	}
 
 
+	// ²¥·ÅÒôÀÖ
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("sound/MusicEx_Normal.ogg", true);
+
+
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+
+	//±³¾°
+
+	auto spr_bg = Sprite::create("bg_table.jpg");
+	spr_bg->setPosition(Vec2(visibleSize.width / 2,visibleSize.height /2 ));
+	addChild(spr_bg);
+
+
+	auto spr_flag = Sprite::create("d_flag.png");
+	spr_flag->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2 + 100));
+	addChild(spr_flag);
+
+	//auto itemBack = customMenuItem("item_back.png", "item_back.png", CC_CALLBACK_1(GameScene::menuBackCallback, this));
+
+
 
 
 
