@@ -6,7 +6,7 @@
 
 USING_NS_CC;
 
-class BottomCardZone : Sprite{
+class BottomCardZone :public Sprite{
 public:
 
 	static BottomCardZone * create();
