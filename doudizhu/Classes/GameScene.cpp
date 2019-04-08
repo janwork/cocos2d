@@ -173,6 +173,22 @@ bool  GameScene::init(){
 }
 
 void GameScene::initCards(){
+	for (int i = 0; i < 13; i++){
+		for (int j = 0; j < 4; j++){
+			PokeInfo info;
+			info._num = (PokeNum)i;
+			info._tag = (PokeTag)j;
+			_pokeInfo.push_back(info);
+		}
+	}
+
+	PokeInfo info;
+	info._num = (PokeNum)13;
+	info._tag = (PokeTag)0;
+	_pokeInfo.push_back(info);
+	info._num = (PokeNum)14;
+	_pokeInfo.push_back(info);
+
 
 }
 
@@ -180,66 +196,327 @@ static int index_fapai = 0;
 
 
 void GameScene::faPai(){
+
+	index_fapai = 0;
+
+	srand(time(0));
+
+	std::random_shuffle(_pokeInfo.begin(), _pokeInfo.end());
+
+	auto delay = DelayTime::create(0.04);
+	auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackFaPai, this));
+	auto seq = Sequence::createWithTwoActions(delay, callback);
+	this->runAction(seq);
+
+
+	schedule(schedule_selector(GameScene::OutCard), 0.1);
 }
 
-void GameScene::callbackFaPai(Node *node){
+void GameScene::callbackFaPai(Node *node)
+{
 
+	if (index_fapai < 51)
+	{
+		if (index_fapai % 3 == 0)
+		{
+
+			_player1->FaPai(this, _pokeInfo.at(index_fapai));
+		}
+		else if (index_fapai % 3 == 1)
+		{
+			_player2->FaPai(this, _pokeInfo.at(index_fapai));
+		}
+		else if (index_fapai % 3 == 2)
+		{
+			_player3->FaPai(this, _pokeInfo.at(index_fapai));
+		}
+
+		index_fapai++;
+	}
+
+	if (index_fapai < 51)
+	{
+		auto delay = DelayTime::create(0.04);
+		auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackFaPai, this));
+		auto seq = Sequence::createWithTwoActions(delay, callback);
+		this->runAction(seq);
+	}
+	else
+	{
+		_menuQiangDiZhu->setVisible(true);
+	}
 }
 
 void GameScene::FaDiPai(Player* player){
+	for (int i = index_fapai; i < 54; i++)
+	{
+		_bottomCardZone->show(_pokeInfo.at(i));
+		_vecDiPai.push_back(_pokeInfo.at(i));
+	}
 
+	player->setDiZhu();
+
+	for (int i = 0; i < _vecDiPai.size(); i++)
+	{
+		player->FaPai(this, _vecDiPai[i]);
+	}
 }
 
 void GameScene::menuBackCallback(Ref* pSender){
-
+	SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+	Director::getInstance()->replaceScene(MenuScene::createScene());
 }
 
 void GameScene::menuReadyCallback(Ref* pSender){
+	faPai();
 
+	_menuReady->setVisible(false);
 }
 
-void GameScene::menuRestartCallback(Ref* pSender){
-
+void GameScene::menuRestartCallback(Ref* pSender)
+{
+	SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+	Director::getInstance()->replaceScene(GameScene::createScene());
 }
 
-void GameScene::menuQiangCallback(Ref* pSender){
+void GameScene::menuQiangCallback(Ref* pSender)
+{
+	SimpleAudioEngine::getInstance()->playEffect("sound/Man/Order.ogg");
 
+	FaDiPai(_player1);
+	_menuQiangDiZhu->setVisible(false);
+	_menuChuPai->setVisible(true);
 }
 
-void GameScene::menuBuQiangCallback(Ref* pSender){
+void GameScene::menuBuQiangCallback(Ref* pSender)
+{
+	SimpleAudioEngine::getInstance()->playEffect("sound/Man/NoOrder.ogg");
 
+	_menuQiangDiZhu->setVisible(false);
+
+	auto delay = DelayTime::create(2);
+	auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackQiangDiZhu2, this));
+	auto seq = Sequence::createWithTwoActions(delay, callback);
+	this->runAction(seq);
 }
 
-void GameScene::callbackQiangDiZhu2(Node *node){
+void GameScene::callbackQiangDiZhu2(Node *node)
+{
+	if (_player2->IsQiangDiZhu())
+	{
+		FaDiPai(_player2);
 
+		if (!_gameover){
+			auto delay = DelayTime::create(3);
+			auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackChuPai2, this));
+			auto seq = Sequence::createWithTwoActions(delay, callback);
+
+			this->runAction(seq);
+
+			SimpleAudioEngine::getInstance()->playEffect("sound/Man/Rob1.ogg");
+
+
+			if (!_begin){
+				_begin = true;
+			}
+		}
+	}
+	else
+	{
+		SimpleAudioEngine::getInstance()->playEffect("sound/Man/NoRob.ogg");
+
+		auto delay = DelayTime::create(2);
+		auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackQiangDiZhu3, this));
+		auto seq = Sequence::createWithTwoActions(delay, callback);
+
+		this->runAction(seq);
+	}
 }
 
 void GameScene::callbackQiangDiZhu3(Node* node){
+	FaDiPai(_player3);
 
+	if (!_gameover)
+	{
+		auto delay = DelayTime::create(2);
+		auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackChuPai3, this));
+		auto seq = Sequence::createWithTwoActions(delay, callback);
+
+		this->runAction(seq);
+
+		SimpleAudioEngine::getInstance()->playEffect("sound/Man/Rob3.ogg");
+
+		if (!_begin)
+		{
+			_begin = true;
+		}
+	}
 }
 
-void GameScene::menuTiShiCallback(Ref* pSender){
+void GameScene::menuTiShiCallback(Ref* pSender)
+{
 
+
+	CARDS_DATA card_data = PanDuanPaiXing(_arrPlayerOut);
+
+
+	auto player3_outcards = _player3->GetOutCards();
+
+	CARDS_DATA player3_card_data = PanDuanPaiXing(player3_outcards);
+
+
+	if (player3_outcards.empty())
+	{
+		auto player2_outcards = _player2->GetOutCards();
+		CARDS_DATA player2_card_data = PanDuanPaiXing(player2_outcards);
+
+		if (player2_outcards.empty())
+		{
+			_player1->ShowTipInfo(false, player2_card_data._type, player2_card_data._cards.size(), player2_card_data._value);
+		}
+		else
+		{
+			_player1->ShowTipInfo(true, player2_card_data._type, player2_card_data._cards.size(), player2_card_data._value);
+		}
+
+	}
+	else
+	{
+		_player1->ShowTipInfo(true, player3_card_data._type, player3_card_data._cards.size(), player3_card_data._value);
+	}
 }
 
-void GameScene::menuBuChuCallback(Ref* pSender){
+void GameScene::menuBuChuCallback(Ref* pSender)
+{
+	_player3->clearCards();
+	_player1->BuChu();
 
+	auto delay = DelayTime::create(1);
+	auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackChuPai2,this));
+	auto seq = Sequence::createWithTwoActions(delay, callback);
+
+	this->runAction(seq);
+
+	_menuChuPai->setVisible(false);
+	SimpleAudioEngine::getInstance()->playEffect("sound/Man/buyao4.ogg");
 }
 
-void GameScene::menuChuPaiCallback(Ref* pSender){
+void GameScene::menuChuPaiCallback(Ref* pSender)
+{
+	if (!_begin)
+	{
+		_begin = true;
+	}
 
+	auto player3_outcards = _player3->GetOutCards();
+
+	CARDS_DATA player3_card_data = PanDuanPaiXing(player3_outcards);
+
+
+	if (player3_outcards.empty())
+	{
+		auto player2_outcards = _player2->GetOutCards();
+		CARDS_DATA player2_card_data = PanDuanPaiXing(player2_outcards);
+
+		if (player2_outcards.empty())
+		{
+			_player1->ChuPai(this, false, ERROR_CARD, 0, 1);
+		}
+		else
+		{
+			_player1->ChuPai(this, true, player2_card_data._type, player2_outcards.size(), player2_card_data._value);
+		}
+	}
+	else
+	{
+		_player1->ChuPai(this, true, player3_card_data._type, player3_outcards.size(), player3_card_data._value);
+	}
+
+	_arrPlayerOut->removeAllObjects();
+
+	if (!_gameover)
+	{
+		auto delay = DelayTime::create(1);
+		auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackChuPai2, this));
+		auto seq = Sequence::createWithTwoActions(delay, callback);
+
+		this->runAction(seq);
+	}
+
+	_menuChuPai->setVisible(false);
 }
 
-void GameScene::callbackChuPai2(Node * node){
+void GameScene::callbackChuPai2(Node * node)
+{
+	// 出牌之前，判断上家的牌型
+	auto player1_outcards = _player1->GetOutCards();
+	CARDS_DATA player1_card_data = PanDuanPaiXing(player1_outcards);
 
+	if (player1_outcards.empty())
+	{
+		auto player3_outcards = _player3->GetOutCards();
+		CARDS_DATA player3_card_data = PanDuanPaiXing(player3_outcards);
+		if (player3_outcards.empty())
+		{
+			_player2->ChuPai(this, false, ERROR_CARD, 0, 1);// 出牌
+		}
+		else
+		{
+			_player2->ChuPai(this, true, player3_card_data._type, player3_outcards.size(), player3_card_data._value);// 跟牌
+		}
+	}
+	else
+	{
+		_player2->ChuPai(this, true, player1_card_data._type, player1_outcards.size(), player1_card_data._value);// 跟牌
+	}
+
+	if (!_gameover)
+	{
+		auto delay = DelayTime::create(1);
+		auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackChuPai3, this));
+		auto seq = Sequence::createWithTwoActions(delay, callback);
+		this->runAction(seq);
+	}
 }
 
-void GameScene::callbackChuPai3(Node * node){
+void GameScene::callbackChuPai3(Node * node)
+{
+	// 出牌之前，判断上家的牌型
+	auto player2_outcards = _player2->GetOutCards();
+	CARDS_DATA player2_card_data = PanDuanPaiXing(player2_outcards);
 
+	if (player2_outcards.empty())
+	{
+		auto player1_outcards = _player1->GetOutCards();
+		CARDS_DATA player1_card_data = PanDuanPaiXing(player1_outcards);
+		if (player1_outcards.empty())
+		{
+			_player3->ChuPai(this, false, ERROR_CARD, 0, 1);// 出牌
+		}
+		else
+		{
+			_player3->ChuPai(this, true, player1_card_data._type, player1_outcards.size(), player1_card_data._value);// 跟牌
+		}
+	}
+	else
+	{
+		_player3->ChuPai(this, true, player2_card_data._type, player2_outcards.size(), player2_card_data._value);// 跟牌
+	}
+
+	if (!_gameover)
+	{
+		_menuChuPai->setVisible(true);
+	}
 }
 
 void GameScene::update(float dt){
 
+}
+
+void GameScene::setChuPaiMenuEnabled(bool isChuPai, bool isBuChu)
+{
+	((MenuItemFont *)_menuChuPai->getChildByTag(1))->setEnabled(isChuPai);
+	((MenuItemFont *)_menuChuPai->getChildByTag(0))->setCascadeColorEnabled(isBuChu);
 }
 
 void GameScene::OutCard(float dt){
@@ -247,8 +524,22 @@ void GameScene::OutCard(float dt){
 }
 
 void GameScene::gameover(int winID){
+	_gameover = true;
 
+	unschedule(schedule_selector(GameScene::OutCard));
+
+	_menuChuPai->setVisible(false);
+	_menuQiangDiZhu->setVisible(false);
+	_menuReady->setVisible(false);
+
+	jiesuan(winID);
 }
+
+int player1_delta_score = 0;
+int player2_delta_score = 0;
+int player3_delta_score = 0;
+bool isPlayerWin = false;
+
 
 void GameScene::jiesuan(int winID){
 
