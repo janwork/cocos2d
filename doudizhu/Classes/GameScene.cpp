@@ -521,6 +521,65 @@ void GameScene::setChuPaiMenuEnabled(bool isChuPai, bool isBuChu)
 
 void GameScene::OutCard(float dt){
 
+
+	if (_state == 1)
+	{
+
+
+		if (!_begin)
+		{
+			CARDS_DATA card_data = PanDuanPaiXing(_arrPlayerOut);
+			setChuPaiMenuEnabled(card_data._type != ERROR_CARD, false);
+		}
+		else
+		{
+			CARDS_DATA card_data = PanDuanPaiXing(_arrPlayerOut);
+
+			auto player3_outcards = _player3->GetOutCards();
+			CARDS_DATA player3_card_data = PanDuanPaiXing(player3_outcards);
+
+			if (player3_outcards.empty())
+			{
+				auto player2_outcards = _player2->GetOutCards();
+				CARDS_DATA player2_card_data = PanDuanPaiXing(player2_outcards);
+
+				if (player2_outcards.empty())
+				{
+					setChuPaiMenuEnabled(card_data._type != ERROR_CARD, false);
+				}
+				else
+				{
+					if (
+						(card_data._type == player2_card_data._type && card_data._value > player2_card_data._value) ||
+						(card_data._type != player2_card_data._type && player2_card_data._type != MISSILE_CARD &&
+						(card_data._type == BOMB_CARD || card_data._type == MISSILE_CARD) && card_data._value > player2_card_data._value))
+					{
+						setChuPaiMenuEnabled(true, true);
+					}
+					else
+					{
+						setChuPaiMenuEnabled(false, true);
+					}
+				}
+			}
+			else
+			{
+
+				if (
+					(card_data._type == player3_card_data._type && card_data._value > player3_card_data._value) ||
+					(card_data._type != player3_card_data._type && player3_card_data._type != MISSILE_CARD &&
+					(card_data._type == BOMB_CARD || card_data._type == MISSILE_CARD) && card_data._value > player3_card_data._value))
+				{
+					setChuPaiMenuEnabled(true, true);
+				}
+				else
+				{
+					setChuPaiMenuEnabled(false, true);
+				}
+			}
+
+		}
+	}
 }
 
 void GameScene::gameover(int winID){
@@ -541,10 +600,220 @@ int player3_delta_score = 0;
 bool isPlayerWin = false;
 
 
-void GameScene::jiesuan(int winID){
+void GameScene::jiesuan(int winID)
+{
+	int base_score = 100;
+
+	player1_delta_score = 0;
+	player2_delta_score = 0;
+	player3_delta_score = 0;
+
+	if (winID == 1)
+	{
+		isPlayerWin = true;
+
+		if (_player1->getIsDiZhu())
+		{
+			player1_delta_score = base_score * 2;
+			player2_delta_score = base_score * -1;
+			player3_delta_score = base_score * -1;
+		}
+		else if (_player2->getIsDiZhu())
+		{
+			player1_delta_score = base_score * 1;
+			player2_delta_score = base_score * -2;
+			player3_delta_score = base_score * 1;
+		}
+		else
+		{
+			player1_delta_score = base_score * 1;
+			player2_delta_score = base_score * 1;
+			player3_delta_score = base_score * -2;
+		}
+	}
+	else if (winID == 2)
+	{
+		isPlayerWin = false;
+
+		if (_player1->getIsDiZhu())
+		{
+			player1_delta_score = base_score * -2;
+			player2_delta_score = base_score * 1;
+			player3_delta_score = base_score * 1;
+		}
+		else if (_player2->getIsDiZhu())
+		{
+			player1_delta_score = base_score * -1;
+			player2_delta_score = base_score * 2;
+			player3_delta_score = base_score * -1;
+		}
+		else
+		{
+			player1_delta_score = base_score * 1;
+			player2_delta_score = base_score * 1;
+			player3_delta_score = base_score * -2;
+		}
+	}
+	else
+	{
+		isPlayerWin = false;
+
+		if (_player1->getIsDiZhu())
+		{
+			player1_delta_score = base_score * -2;
+			player2_delta_score = base_score * 1;
+			player3_delta_score = base_score * 1;
+		}
+		else if (_player2->getIsDiZhu())
+		{
+			player1_delta_score = base_score * 1;
+			player2_delta_score = base_score *  -2;
+			player3_delta_score = base_score * 1;
+		}
+		else
+		{
+			player1_delta_score = base_score * -1;
+			player2_delta_score = base_score * -1;
+			player3_delta_score = base_score * 2;
+		}
+	}
+
+
+	_player1->Score(player1_delta_score);
+	_player2->Score(player2_delta_score);
+	_player3->Score(player3_delta_score);
+
+	s_runtimeData._playerinfo1._score = _player1->GetScore();
+	s_runtimeData._playerinfo2._score = _player2->GetScore();
+	s_runtimeData._playerinfo3._score = _player3->GetScore();
+
+	auto delay = DelayTime::create(1);
+	auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackJieSuan, this));
+	auto seq = Sequence::createWithTwoActions(delay, callback);
+
+	this->runAction(seq);
+
+
 
 }
 
 void GameScene::callbackJieSuan(Node *node){
+
+	_menuBack->setEnabled(false);
+	_menuChuPai->setEnabled(false);
+	_menuQiangDiZhu->setEnabled(false);
+	_menuReady->setEnabled(false);
+
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+
+	SimpleAudioEngine::getInstance()->playEffect(isPlayerWin ? "sound/MusicEx_Win.ogg" : "sound/MusicEx_Lose.ogg");
+
+	auto bg = Sprite::create(isPlayerWin ? "gameover/ddz_diploma_win_big_bg.jpg" : "gameover/ddz_diploma_lose_big_bg.jpg");
+
+	bg->setScale(1.4);
+	bg->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+	this->addChild(bg, 1000);
+
+
+	auto jiesuanBg = Sprite::create("gameover/bg_small.png");
+	jiesuanBg->setPosition(Vec2(visibleSize.width * 2/3, visibleSize.height /2));
+	this->addChild(jiesuanBg, 1001);
+
+	auto tiaofu = Sprite::create(isPlayerWin ? "gameover/gameresult_win_tiaofu.png" : "gameover/gameresult_lose_tiaofu.png");
+	tiaofu->setPosition(Vec2(350 , 400 ));
+	jiesuanBg->addChild(tiaofu, 0);
+
+	auto shengli = Sprite::createWithSpriteFrameName(isPlayerWin ? "ddz_result_base_word_win.png" : "ddz_result_base_word_lose.png");
+	shengli->setPosition(Vec2(350 , 430 ));
+	jiesuanBg->addChild(shengli, 0);
+
+	auto player = Sprite::create(
+		isPlayerWin ?
+		(_player1->getIsDiZhu() ? "gameover/owner1_win.png" : "gameover/farmer1_win.png")
+		:
+		(_player1->getIsDiZhu() ? "gameover/owner1_lose.png" : "gameover/farmer1_lose.png"));
+	player->setPosition(Vec2(-200 , 200));
+	jiesuanBg->addChild(player, 0);
+
+	auto label_name = Label::createWithTTF(FileUtils::getInstance()->getValueMapFromFile("strings.xml").at("name").asString(), "fonts/FZCuYuan-M03S.ttf", 24);
+	label_name->setColor(Color3B(255, 0, 0));
+	label_name->setPosition(Vec2(150 , 300 ));
+	jiesuanBg->addChild(label_name, 1);
+
+	// 地主标志
+	auto dizhu_flag = Sprite::createWithSpriteFrameName("ddz_result_base_dizhu_flag.png");
+	dizhu_flag->setPosition(Vec2(90 , _player1->getIsDiZhu() ? 250  : (_player2->getIsDiZhu() ? 200  : (_player3->getIsDiZhu() ? 150  : 0))));
+	jiesuanBg->addChild(dizhu_flag, 0);
+
+	auto label_name_player1 = Label::createWithTTF(_player1->GetName().c_str(), "fonts/FZCuYuan-M03S.ttf", 24 );
+	label_name_player1->setColor(Color3B(255, 0, 0));
+	label_name_player1->setPosition(Vec2(150 , 250 ));
+	jiesuanBg->addChild(label_name_player1, 1);
+
+	auto label_name_player2 = Label::createWithTTF(_player2->GetName().c_str(), "fonts/FZCuYuan-M03S.ttf", 24 );
+	label_name_player2->setColor(Color3B(255, 0, 0));
+	label_name_player2->setPosition(Vec2(150 , 200 ));
+	jiesuanBg->addChild(label_name_player2, 1);
+
+	auto label_name_player3 = Label::createWithTTF(_player3->GetName().c_str(), "fonts/FZCuYuan-M03S.ttf", 24 );
+	label_name_player3->setColor(Color3B(255, 0, 0));
+	label_name_player3->setPosition(Vec2(150 , 150 ));
+	jiesuanBg->addChild(label_name_player3, 1);
+
+	// 欢乐豆
+
+	auto label_huanledou = Label::createWithTTF(FileUtils::getInstance()->getValueMapFromFile("strings.xml").at("score").asString(), "fonts/FZCuYuan-M03S.ttf", 24 );
+	label_huanledou->setColor(Color3B(255, 0, 0));
+	label_huanledou->setPosition(Vec2(350 , 300 ));
+	jiesuanBg->addChild(label_huanledou, 1);
+
+	auto label_huanledou_player1 = Label::createWithTTF(_player1->GetScoreString().c_str(), "fonts/FZCuYuan-M03S.ttf", 24 );
+	label_huanledou_player1->setColor(Color3B(255, 0, 0));
+	label_huanledou_player1->setPosition(Vec2(350 , 250 ));
+	jiesuanBg->addChild(label_huanledou_player1, 1);
+
+	auto label_huanledou_player2 = Label::createWithTTF(_player2->GetScoreString().c_str(), "fonts/FZCuYuan-M03S.ttf", 24 );
+	label_huanledou_player2->setColor(Color3B(255, 0, 0));
+	label_huanledou_player2->setPosition(Vec2(350 , 200 ));
+	jiesuanBg->addChild(label_huanledou_player2, 1);
+
+	auto label_huanledou_player3 = Label::createWithTTF(_player3->GetScoreString().c_str(), "fonts/FZCuYuan-M03S.ttf", 24 );
+	label_huanledou_player3->setColor(Color3B(255, 0, 0));
+	label_huanledou_player3->setPosition(Vec2(350 , 150 ));
+	jiesuanBg->addChild(label_huanledou_player3, 1);
+
+	// 分数加减
+	char str_score_delta_player1[255] = { 0 };
+	char str_score_delta_player2[255] = { 0 };
+	char str_score_delta_player3[255] = { 0 };
+
+	sprintf(str_score_delta_player1, "%+d", player1_delta_score);
+	sprintf(str_score_delta_player2, "%+d", player2_delta_score);
+	sprintf(str_score_delta_player3, "%+d", player3_delta_score);
+
+	auto label_huanledou_d_player1 = Label::createWithTTF(str_score_delta_player1, "fonts/FZCuYuan-M03S.ttf", 24 );
+	label_huanledou_d_player1->setColor(Color3B(255, 0, 0));
+	label_huanledou_d_player1->setPosition(Vec2(480, 250 ));
+	jiesuanBg->addChild(label_huanledou_d_player1, 1);
+
+	auto label_huanledou_d_player2 = Label::createWithTTF(str_score_delta_player2, "fonts/FZCuYuan-M03S.ttf", 24 );
+	label_huanledou_d_player2->setColor(Color3B(255, 0, 0));
+	label_huanledou_d_player2->setPosition(Vec2(480 , 200 ));
+	jiesuanBg->addChild(label_huanledou_d_player2, 1);
+
+	auto label_huanledou_d_player3 = Label::createWithTTF(str_score_delta_player3, "fonts/FZCuYuan-M03S.ttf", 24 );
+	label_huanledou_d_player3->setColor(Color3B(255, 0, 0));
+	label_huanledou_d_player3->setPosition(Vec2(480 , 150 ));
+	jiesuanBg->addChild(label_huanledou_d_player3, 1);
+
+	// 重开菜单
+
+	auto itemRestart = customMenuItemWithSpriteFrameName("ddzsingle_maplvl_btn_restart.png", "ddzsingle_maplvl_btn_restart.png", CC_CALLBACK_1(SceneGame::menuRestartCallback, this));
+	itemRestart->setPosition(200 , -150 );
+	auto menuRestart = Menu::create(itemRestart, NULL);
+	this->addChild(menuRestart, 1002);
+
 
 }
