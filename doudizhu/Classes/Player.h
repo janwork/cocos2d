@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "SimpleAudioEngine.h"
+#include "Poke.h"
 
 USING_NS_CC;
 
@@ -98,7 +99,7 @@ public:
 
 	void FaPai(GameScene * scene, PokeInfo info);
 
-	void  ChuPai(GameScene* scene, bool isFollow, CARD_TYPE cardType, unsigned int count, unsigned int value);
+	void ChuPai(GameScene* scene, bool isFollow, CARD_TYPE cardType, unsigned int count, unsigned int value);
 
 	void BuChu();
 
@@ -127,7 +128,6 @@ public:
 	std::vector<int>& FindOutCards();
 
 	std::vector<PokeInfo>& GetOutCards();
-
 
 
 

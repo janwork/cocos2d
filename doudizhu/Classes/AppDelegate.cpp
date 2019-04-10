@@ -1,5 +1,7 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
+#include "GameScene.h"
+#include "MenuScene.h"
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -73,7 +75,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0f / 60);
 
     // Set the design resolution
-    glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
+    glview->setDesignResolutionSize(1200, 678, ResolutionPolicy::NO_BORDER);
     auto frameSize = glview->getFrameSize();
     // if the frame's height is larger than the height of medium size.
     if (frameSize.height > mediumResolutionSize.height)
@@ -93,8 +95,16 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     register_all_packages();
 
+
+	// 加载游戏需要资源
+	auto frameCache = SpriteFrameCache::getInstance();
+	frameCache->addSpriteFramesWithFile("poker_b.plist", "poker_b.png");
+	frameCache->addSpriteFramesWithFile("gameover/ddzsingle_map_lvl.plist", "gameover/ddzsingle_map_lvl.png");
+	frameCache->addSpriteFramesWithFile("gameover/nt_result_base.plist", "gameover/nt_result_base.png");
+
+
     // create a scene. it's an autorelease object
-    auto scene = HelloWorld::createScene();
+	auto scene = MenuScene::createScene();
 
     // run
     director->runWithScene(scene);

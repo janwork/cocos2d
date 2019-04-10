@@ -31,8 +31,11 @@ RunTimeData s_runtimeData;
 
 
 Scene * GameScene::createScene(){
+
 	auto scene = Scene::create();
+
 	auto layer = GameScene::create();
+
 	scene->addChild(layer);
 
 	return scene;
@@ -45,7 +48,7 @@ bool  GameScene::init(){
 	}
 
 
-	// 播放音乐
+	//// 播放音乐
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("sound/MusicEx_Normal.ogg", true);
 
 
@@ -172,7 +175,9 @@ bool  GameScene::init(){
 
 }
 
-void GameScene::initCards(){
+void GameScene::initCards()
+{
+
 	for (int i = 0; i < 13; i++){
 		for (int j = 0; j < 4; j++){
 			PokeInfo info;
@@ -268,8 +273,8 @@ void GameScene::menuBackCallback(Ref* pSender){
 }
 
 void GameScene::menuReadyCallback(Ref* pSender){
-	faPai();
 
+	faPai();
 	_menuReady->setVisible(false);
 }
 
@@ -338,24 +343,23 @@ void GameScene::callbackQiangDiZhu3(Node* node){
 
 	if (!_gameover)
 	{
-		auto delay = DelayTime::create(2);
-		auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackChuPai3, this));
-		auto seq = Sequence::createWithTwoActions(delay, callback);
+	auto delay = DelayTime::create(2);
+	auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackChuPai3, this));
+	auto seq = Sequence::createWithTwoActions(delay, callback);
 
-		this->runAction(seq);
+	this->runAction(seq);
 
-		SimpleAudioEngine::getInstance()->playEffect("sound/Man/Rob3.ogg");
+	SimpleAudioEngine::getInstance()->playEffect("sound/Man/Rob3.ogg");
 
-		if (!_begin)
-		{
-			_begin = true;
-		}
+	if (!_begin)
+	{
+	_begin = true;
+	}
 	}
 }
 
 void GameScene::menuTiShiCallback(Ref* pSender)
 {
-
 
 	CARDS_DATA card_data = PanDuanPaiXing(_arrPlayerOut);
 
@@ -405,7 +409,7 @@ void GameScene::menuChuPaiCallback(Ref* pSender)
 {
 	if (!_begin)
 	{
-		_begin = true;
+	_begin = true;
 	}
 
 	auto player3_outcards = _player3->GetOutCards();
@@ -415,32 +419,32 @@ void GameScene::menuChuPaiCallback(Ref* pSender)
 
 	if (player3_outcards.empty())
 	{
-		auto player2_outcards = _player2->GetOutCards();
-		CARDS_DATA player2_card_data = PanDuanPaiXing(player2_outcards);
+	auto player2_outcards = _player2->GetOutCards();
+	CARDS_DATA player2_card_data = PanDuanPaiXing(player2_outcards);
 
-		if (player2_outcards.empty())
-		{
-			_player1->ChuPai(this, false, ERROR_CARD, 0, 1);
-		}
-		else
-		{
-			_player1->ChuPai(this, true, player2_card_data._type, player2_outcards.size(), player2_card_data._value);
-		}
+	if (player2_outcards.empty())
+	{
+	_player1->ChuPai(this, false, ERROR_CARD, 0, 1);
 	}
 	else
 	{
-		_player1->ChuPai(this, true, player3_card_data._type, player3_outcards.size(), player3_card_data._value);
+	_player1->ChuPai(this, true, player2_card_data._type, player2_outcards.size(), player2_card_data._value);
+	}
+	}
+	else
+	{
+	_player1->ChuPai(this, true, player3_card_data._type, player3_outcards.size(), player3_card_data._value);
 	}
 
 	_arrPlayerOut->removeAllObjects();
 
 	if (!_gameover)
 	{
-		auto delay = DelayTime::create(1);
-		auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackChuPai2, this));
-		auto seq = Sequence::createWithTwoActions(delay, callback);
+	auto delay = DelayTime::create(1);
+	auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackChuPai2, this));
+	auto seq = Sequence::createWithTwoActions(delay, callback);
 
-		this->runAction(seq);
+	this->runAction(seq);
 	}
 
 	_menuChuPai->setVisible(false);
@@ -582,7 +586,8 @@ void GameScene::OutCard(float dt){
 	}
 }
 
-void GameScene::gameover(int winID){
+void GameScene::gameover(int winID)
+{
 	_gameover = true;
 
 	unschedule(schedule_selector(GameScene::OutCard));
@@ -810,7 +815,7 @@ void GameScene::callbackJieSuan(Node *node){
 
 	// 重开菜单
 
-	auto itemRestart = customMenuItemWithSpriteFrameName("ddzsingle_maplvl_btn_restart.png", "ddzsingle_maplvl_btn_restart.png", CC_CALLBACK_1(SceneGame::menuRestartCallback, this));
+	auto itemRestart = customMenuItemWithSpriteFrameName("ddzsingle_maplvl_btn_restart.png", "ddzsingle_maplvl_btn_restart.png", CC_CALLBACK_1(GameScene::menuRestartCallback, this));
 	itemRestart->setPosition(200 , -150 );
 	auto menuRestart = Menu::create(itemRestart, NULL);
 	this->addChild(menuRestart, 1002);

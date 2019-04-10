@@ -67,7 +67,7 @@ bool Player::init(std::string name, int score, bool isHero)
 	this->addChild(avator, 0);
 
 
-	auto back = Sprite::createWithSpriteFrame("b/poker_back.png");
+	auto back = Sprite::createWithSpriteFrameName("b/poker_back.png");
 	back->setScale(0.3);
 	back->setPosition(100, 0);
 	this->addChild(back, 1);
@@ -145,7 +145,7 @@ void Player::setDiZhu()
 	}
 }
 
-void Player::FaPai(SceneGame * scene, PokeInfo info)
+void Player::FaPai(GameScene * scene, PokeInfo info)
 {
 	_vecPokeInfo.push_back(info);
 
@@ -159,7 +159,7 @@ void Player::FaPai(SceneGame * scene, PokeInfo info)
 
 		_cardsManager->sortAllChildren();
 
-		updateCards();
+		this->updateCards();
 }
 
 void Player::ShowTipInfo(bool isFollow, CARD_TYPE cardType, unsigned int count, unsigned int value)

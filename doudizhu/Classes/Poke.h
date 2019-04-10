@@ -3,6 +3,8 @@
 
 #include "cocos2d.h"
 
+USING_NS_CC;
+
 // ÅÆÖµ
 enum PokeNum
 {
@@ -26,7 +28,7 @@ enum PokeNum
 // »¨É«
 enum PokeTag{
 	FANGKUAI = 0,
-	MEIHUI,
+	MEIHUA,
 	HONGTAO,
 	HEITAO
 };
@@ -37,15 +39,16 @@ struct PokeInfo
 	PokeNum _num;
 	PokeTag _tag;
 
-	inline bool operator ==(const PokeInfo &pi) const
+	inline bool operator == (const PokeInfo &pi) const
 	{
 		return (this->_num == pi._num && this->_tag == pi._tag);
 	}
 };
 
-class SceneGame;
+class GameScene;
 
 class Poke : public Sprite{
+
 public:
 	static Poke* create(PokeInfo info, bool isSmall = false);
 
@@ -71,7 +74,17 @@ public:
 	virtual void onTouchCancelled(cocos2d::Touch* touch, cocos2d::Event* event);
 
 
-	CC_SYNTHESIZE(SceneGame *, _gameMain, GameMain);
+	CC_SYNTHESIZE(GameScene *, _gameMain, GameMain);
+
+
+	/*GameScene * getGameMain(){
+		return _gameMain;
+		};
+
+		void setGameMain(GameScene * gameScene){
+		_gameMain = gameScene;
+		};*/
+
 
 	PokeInfo _info;
 

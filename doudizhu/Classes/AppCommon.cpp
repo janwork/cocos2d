@@ -190,7 +190,7 @@ CARDS_DATA PanDuanPaiXing(std::vector<int>& cards){
 
 				if (isContinuous(vec_single))
 				{
-					ret._type = CONMPANY_CARD;
+					ret._type = COMPANY_CARD;
 					ret._value = 80 + cards[0];
 
 					return  ret;

@@ -13,6 +13,7 @@ BottomCardZone* BottomCardZone::create()
 	}
 
 	CC_SAFE_DELETE(sprite);
+
 	return nullptr;
 }
 
@@ -35,7 +36,7 @@ bool BottomCardZone::init()
 
 void BottomCardZone::show(PokeInfo cardInfo)
 {
-	auto card = Poke::create(cardInfo);
+	auto card = Poke::create(cardInfo, false);
 	card->setScale(0.7);
 	this->addChild(card, 100 - cardInfo._num);
 
@@ -45,13 +46,13 @@ void BottomCardZone::show(PokeInfo cardInfo)
 	int count = _children.size();
 
 	int zeroPoint = count / 2;
-	
+
 	for (int i = 0; i < _children.size(); i++)
 	{
-		Poke* card = dynamic_cast<Poke*>(_children.at(i));
-		if (card != NULL){
-			card->setPosition(Vec2((i - zeroPoint * 110, 0)));
-		}
+	Poke* card = dynamic_cast<Poke*>(_children.at(i));
+	if (card != NULL){
+	card->setPosition(Vec2((i - zeroPoint * 110, 0)));
 	}
-
+	}
+	
 }
