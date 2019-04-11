@@ -101,6 +101,8 @@ bool Poke::init(PokeInfo info, bool isSmall)
 			std::stringstream strTag;
 
 			strTag << "b/bigtag_" << _info._tag << ".png";
+
+			CCLOG("<janlog> create Pai %s", strTag.str());
 			
 			auto cardSmallTag = Sprite::createWithSpriteFrameName(strTag.str());
 			cardSmallTag->setScale(0.5);

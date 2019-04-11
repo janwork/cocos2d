@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "Player.h"
 #include "MenuScene.h"
+#include "SimpleAudioEngine.h"
 
 
 USING_NS_CC;
@@ -59,6 +60,7 @@ bool  GameScene::init(){
 	//±³¾°
 
 	auto spr_bg = Sprite::create("bg_table.jpg");
+	spr_bg->setScale(2);
 	spr_bg->setPosition(Vec2(visibleSize.width / 2,visibleSize.height /2 ));
 	addChild(spr_bg);
 
@@ -83,30 +85,40 @@ bool  GameScene::init(){
 
 	auto itemQiang = customMenuItem("item_qiangdizhu.png", "item_qiangdizhu.png", CC_CALLBACK_1(GameScene::menuQiangCallback, this));
 	itemQiang->setPosition(-80, - 50);
+
 	auto itemBuQiang = customMenuItem("item_buqiang.png", "item_buqiang.png", CC_CALLBACK_1(GameScene::menuBuQiangCallback, this));
 	itemBuQiang->setPosition(80, -50);
 
-	_menuQiangDiZhu = Menu::create(itemQiang, itemBuQiang, NULL);
+	_menuQiangDiZhu = Menu::create();
+	_menuQiangDiZhu->addChild(itemQiang, 2, 0);
+	_menuQiangDiZhu->addChild(itemBuQiang, 2, 1);
+
+	_menuQiangDiZhu->setVisible(false);
 	this->addChild(_menuQiangDiZhu, 1);
+
+
 
 	auto itemBuChu = customMenuItem("item_buchu.png", "item_buchu.png", CC_CALLBACK_1(GameScene::menuBuChuCallback, this));
 	itemBuChu->setPosition(50, -50);
+	itemBuChu->setVisible(false);
 
 	auto itemChuPai = customMenuItem("item_chupai.png", "item_chupai.png", CC_CALLBACK_1(GameScene::menuChuPaiCallback, this));
 	itemChuPai->setPosition(250, -50);
+	itemChuPai->setVisible(false);
 
 
 	auto itemTiShi = customMenuItem("item_tishi.png", "item_tishi.png", CC_CALLBACK_1(GameScene::menuTiShiCallback, this));
+	itemTiShi->setVisible(false);
 	itemTiShi->setPosition(-150, -50);
 
 	_menuChuPai = Menu::create();
-	_menuChuPai->addChild(itemBuChu);
-	_menuChuPai->addChild(itemChuPai);
-	_menuChuPai->addChild(itemTiShi);
+	_menuChuPai->addChild(itemBuChu,2, 0);
+	_menuChuPai->addChild(itemChuPai, 2, 1);
+	_menuChuPai->addChild(itemTiShi ,2, 2);
 	this->addChild(_menuChuPai, 1);
 
 
-	_menuChuPai->setVisible(false);
+	//_menuChuPai->setVisible(false);
 
 
 	srand(time(0));
@@ -519,8 +531,8 @@ void GameScene::update(float dt){
 
 void GameScene::setChuPaiMenuEnabled(bool isChuPai, bool isBuChu)
 {
-	((MenuItemFont *)_menuChuPai->getChildByTag(1))->setEnabled(isChuPai);
-	((MenuItemFont *)_menuChuPai->getChildByTag(0))->setCascadeColorEnabled(isBuChu);
+	((MenuItemFont *)_menuChuPai->getChildByTag(0))->setEnabled(isChuPai);//³öÅÆ
+	((MenuItemFont *)_menuChuPai->getChildByTag(1))->setEnabled(isBuChu);//²»³ö
 }
 
 void GameScene::OutCard(float dt){

@@ -1,100 +1,56 @@
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
-#include "GameScene.h"
 #include "MenuScene.h"
-
-// #define USE_AUDIO_ENGINE 1
-// #define USE_SIMPLE_AUDIO_ENGINE 1
-
-#if USE_AUDIO_ENGINE && USE_SIMPLE_AUDIO_ENGINE
-#error "Don't use AudioEngine and SimpleAudioEngine at the same time. Please just select one in your game!"
-#endif
-
-#if USE_AUDIO_ENGINE
-#include "audio/include/AudioEngine.h"
-using namespace cocos2d::experimental;
-#elif USE_SIMPLE_AUDIO_ENGINE
-#include "audio/include/SimpleAudioEngine.h"
-using namespace CocosDenshion;
-#endif
+#include"SimpleAudioEngine.h"   //包含声音引擎头文件  
+#include "AppMacros.h"
+#include "AppCommon.h"
 
 USING_NS_CC;
-
-static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
-static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
+using namespace CocosDenshion;//使用该声音引擎的命名空间  
 
 AppDelegate::AppDelegate()
 {
+
 }
 
-AppDelegate::~AppDelegate() 
+AppDelegate::~AppDelegate()
 {
-#if USE_AUDIO_ENGINE
-    AudioEngine::end();
-#elif USE_SIMPLE_AUDIO_ENGINE
-    SimpleAudioEngine::end();
-#endif
+
 }
 
-// if you want a different context, modify the value of glContextAttrs
-// it will affect all platforms
+//if you want a different context,just modify the value of glContextAttrs
+//it will takes effect on all platforms
 void AppDelegate::initGLContextAttrs()
 {
-    // set OpenGL context attributes: red,green,blue,alpha,depth,stencil
-    GLContextAttrs glContextAttrs = {8, 8, 8, 8, 24, 8};
+	//set OpenGL context attributions,now can only set six attributions:
+	//red,green,blue,alpha,depth,stencil
+	GLContextAttrs glContextAttrs = { 8, 8, 8, 8, 24, 8 };
 
-    GLView::setGLContextAttrs(glContextAttrs);
+	GLView::setGLContextAttrs(glContextAttrs);
 }
 
-// if you want to use the package manager to install more packages,  
-// don't modify or remove this function
-static int register_all_packages()
+bool AppDelegate::applicationDidFinishLaunching()
 {
-    return 0; //flag for packages manager
-}
+	// 初始化Director
+	auto director = Director::getInstance();
+	auto glview = director->getOpenGLView();
+	if (!glview)
+	{
+		glview = GLViewImpl::create("doudizhu");
+		// 960 540
+		//glview->setFrameSize(1200,675);
+		director->setOpenGLView(glview);
 
-bool AppDelegate::applicationDidFinishLaunching() {
-    // initialize director
-    auto director = Director::getInstance();
-    auto glview = director->getOpenGLView();
-    if(!glview) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("doudizhu", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
-#else
-        glview = GLViewImpl::create("doudizhu");
-#endif
-        director->setOpenGLView(glview);
-    }
+		glview->setFrameSize(1200, 675);
+		//glview->setDesignResolutionSize(1200,675, ResolutionPolicy::FIXED_WIDTH);
+		glview->setDesignResolutionSize(1200, 675, ResolutionPolicy::SHOW_ALL);
 
-    // turn on display FPS
-    director->setDisplayStats(true);
+	}
 
-    // set FPS. the default value is 1.0/60 if you don't call this
-    director->setAnimationInterval(1.0f / 60);
+	//director->setContentScaleFactor(SCALE_FACTOR);
 
-    // Set the design resolution
-    glview->setDesignResolutionSize(1200, 678, ResolutionPolicy::NO_BORDER);
-    auto frameSize = glview->getFrameSize();
-    // if the frame's height is larger than the height of medium size.
-    if (frameSize.height > mediumResolutionSize.height)
-    {        
-        director->setContentScaleFactor(MIN(largeResolutionSize.height/designResolutionSize.height, largeResolutionSize.width/designResolutionSize.width));
-    }
-    // if the frame's height is larger than the height of small size.
-    else if (frameSize.height > smallResolutionSize.height)
-    {        
-        director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
-    }
-    // if the frame's height is smaller than the height of medium size.
-    else
-    {        
-        director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
-    }
-
-    register_all_packages();
-
+	// 设置帧数
+	director->setDisplayStats(true);
+	director->setAnimationInterval(1.0 / 60);
 
 	// 加载游戏需要资源
 	auto frameCache = SpriteFrameCache::getInstance();
@@ -102,36 +58,25 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	frameCache->addSpriteFramesWithFile("gameover/ddzsingle_map_lvl.plist", "gameover/ddzsingle_map_lvl.png");
 	frameCache->addSpriteFramesWithFile("gameover/nt_result_base.plist", "gameover/nt_result_base.png");
 
-
-    // create a scene. it's an autorelease object
+	// 运行菜单场景
 	auto scene = MenuScene::createScene();
+	director->runWithScene(scene);
 
-    // run
-    director->runWithScene(scene);
-
-    return true;
+	return true;
 }
 
-// This function will be called when the app is inactive. Note, when receiving a phone call it is invoked.
+// This function will be called when the app is inactive. When comes a phone call,it's be invoked too
 void AppDelegate::applicationDidEnterBackground() {
-    Director::getInstance()->stopAnimation();
+	Director::getInstance()->stopAnimation();
 
-#if USE_AUDIO_ENGINE
-    AudioEngine::pauseAll();
-#elif USE_SIMPLE_AUDIO_ENGINE
-    SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
-    SimpleAudioEngine::getInstance()->pauseAllEffects();
-#endif
+	// if you use SimpleAudioEngine, it must be pause
+	SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }
 
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground() {
-    Director::getInstance()->startAnimation();
+	Director::getInstance()->startAnimation();
 
-#if USE_AUDIO_ENGINE
-    AudioEngine::resumeAll();
-#elif USE_SIMPLE_AUDIO_ENGINE
-    SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-    SimpleAudioEngine::getInstance()->resumeAllEffects();
-#endif
+	// if you use SimpleAudioEngine, it must resume here
+	SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
 }
