@@ -98,36 +98,39 @@ bool Poke::init(PokeInfo info, bool isSmall)
 				num = _info._num + 2;
 			}
 
-			std::stringstream strTag;
 
-			strTag << "b/bigtag_" << _info._tag << ".png";
+			char strTag[256];
 
-			CCLOG("<janlog> create Pai %s", strTag.str());
-			
-			auto cardSmallTag = Sprite::createWithSpriteFrameName(strTag.str());
+			sprintf(strTag, "b/bigtag_%d.png", _info._tag);
+
+			auto cardSmallTag = Sprite::createWithSpriteFrameName(strTag);
 			cardSmallTag->setScale(0.5);
 			cardSmallTag->setPosition(-50, 20);
 			this->addChild(cardSmallTag);
 
 			if (_info._tag == HEITAO || _info._tag == MEIHUA)
 			{
-				std::stringstream strNum;
-				strNum << "b/black_" << num << ".png";
-				auto cardNum = Sprite::createWithSpriteFrameName(strNum.str());
+
+				char strNum[256];
+				sprintf(strNum, "b/black_%d.png", num);
+				CCLOG("<janlog> 1111 %s", strNum);
+				auto cardNum = Sprite::createWithSpriteFrameName(strNum);
 				cardNum->setPosition(-50, 70);
 				this->addChild(cardNum);
 			}
 			else
 			{
-				std::stringstream strNum;
-				strNum << "b/red_" << num << ".png";
-				auto cardNum = Sprite::createWithSpriteFrameName(strNum.str());
+
+				char strNum[256];
+				sprintf(strNum, "b/red_%d.png", num);
+				CCLOG("<janlog> 222 %s", strNum);
+				auto cardNum = Sprite::createWithSpriteFrameName(strNum);
 				cardNum->setPosition(-50, 70);
 				this->addChild(cardNum);
 			}
 
 
-			auto cardTag = Sprite::createWithSpriteFrameName(strTag.str());
+			auto cardTag = Sprite::createWithSpriteFrameName(strTag);
 			cardTag->setPosition(20, -30);
 			this->addChild(cardTag);
 		}

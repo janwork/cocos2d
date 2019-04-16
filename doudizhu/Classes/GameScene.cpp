@@ -21,6 +21,7 @@ struct RunTimeData
 
 
 	bool  _isReady;
+
 	PlayerInfo _playerinfo1;
 	PlayerInfo _playerinfo2;
 	PlayerInfo _playerinfo3;
@@ -96,8 +97,6 @@ bool  GameScene::init(){
 	_menuQiangDiZhu->setVisible(false);
 	this->addChild(_menuQiangDiZhu, 1);
 
-
-
 	auto itemBuChu = customMenuItem("item_buchu.png", "item_buchu.png", CC_CALLBACK_1(GameScene::menuBuChuCallback, this));
 	itemBuChu->setPosition(50, -50);
 	itemBuChu->setVisible(false);
@@ -159,14 +158,17 @@ bool  GameScene::init(){
 
 	_player1 = Player::create(s_runtimeData._playerinfo1._name, s_runtimeData._playerinfo1._score, true);
 	_player1->setPosition(70, 300);
+	_player1->SetPlayerID(1);
 	this->addChild(_player1);
 
 	_player2 = Player::create(s_runtimeData._playerinfo2._name, s_runtimeData._playerinfo2._score, false);
 	_player2->setPosition(1000, 600);
+	_player2->SetPlayerID(2);
 	this->addChild(_player2);
 
 	_player3 = Player::create(s_runtimeData._playerinfo3._name, s_runtimeData._playerinfo3._score, false);
 	_player3->setPosition(70, 600);
+	_player3->SetPlayerID(3);
 	this->addChild(_player3);
 
 	_bottomCardZone = BottomCardZone::create();
@@ -189,16 +191,18 @@ bool  GameScene::init(){
 
 void GameScene::initCards()
 {
-
+	_pokeInfo.clear();
 	for (int i = 0; i < 13; i++){
 		for (int j = 0; j < 4; j++){
 			PokeInfo info;
 			info._num = (PokeNum)i;
 			info._tag = (PokeTag)j;
 			_pokeInfo.push_back(info);
+
 		}
 	}
 
+	// 大小王
 	PokeInfo info;
 	info._num = (PokeNum)13;
 	info._tag = (PokeTag)0;
@@ -226,7 +230,7 @@ void GameScene::faPai(){
 	this->runAction(seq);
 
 
-	schedule(schedule_selector(GameScene::OutCard), 0.1);
+	//schedule(schedule_selector(GameScene::OutCard), 0.1);
 }
 
 void GameScene::callbackFaPai(Node *node)
@@ -234,9 +238,9 @@ void GameScene::callbackFaPai(Node *node)
 
 	if (index_fapai < 51)
 	{
+
 		if (index_fapai % 3 == 0)
 		{
-
 			_player1->FaPai(this, _pokeInfo.at(index_fapai));
 		}
 		else if (index_fapai % 3 == 1)
@@ -363,10 +367,10 @@ void GameScene::callbackQiangDiZhu3(Node* node){
 
 	SimpleAudioEngine::getInstance()->playEffect("sound/Man/Rob3.ogg");
 
-	if (!_begin)
-	{
-	_begin = true;
-	}
+		if (!_begin)
+		{
+			_begin = true;
+		}
 	}
 }
 
@@ -379,7 +383,6 @@ void GameScene::menuTiShiCallback(Ref* pSender)
 	auto player3_outcards = _player3->GetOutCards();
 
 	CARDS_DATA player3_card_data = PanDuanPaiXing(player3_outcards);
-
 
 	if (player3_outcards.empty())
 	{
@@ -421,7 +424,7 @@ void GameScene::menuChuPaiCallback(Ref* pSender)
 {
 	if (!_begin)
 	{
-	_begin = true;
+		_begin = true;
 	}
 
 	auto player3_outcards = _player3->GetOutCards();
@@ -431,21 +434,21 @@ void GameScene::menuChuPaiCallback(Ref* pSender)
 
 	if (player3_outcards.empty())
 	{
-	auto player2_outcards = _player2->GetOutCards();
-	CARDS_DATA player2_card_data = PanDuanPaiXing(player2_outcards);
+		auto player2_outcards = _player2->GetOutCards();
+		CARDS_DATA player2_card_data = PanDuanPaiXing(player2_outcards);
 
 	if (player2_outcards.empty())
 	{
-	_player1->ChuPai(this, false, ERROR_CARD, 0, 1);
+		_player1->ChuPai(this, false, ERROR_CARD, 0, 1);
 	}
 	else
 	{
-	_player1->ChuPai(this, true, player2_card_data._type, player2_outcards.size(), player2_card_data._value);
+		_player1->ChuPai(this, true, player2_card_data._type, player2_outcards.size(), player2_card_data._value);
 	}
 	}
 	else
 	{
-	_player1->ChuPai(this, true, player3_card_data._type, player3_outcards.size(), player3_card_data._value);
+		_player1->ChuPai(this, true, player3_card_data._type, player3_outcards.size(), player3_card_data._value);
 	}
 
 	_arrPlayerOut->removeAllObjects();
@@ -531,8 +534,8 @@ void GameScene::update(float dt){
 
 void GameScene::setChuPaiMenuEnabled(bool isChuPai, bool isBuChu)
 {
-	((MenuItemFont *)_menuChuPai->getChildByTag(0))->setEnabled(isChuPai);//出牌
-	((MenuItemFont *)_menuChuPai->getChildByTag(1))->setEnabled(isBuChu);//不出
+	((MenuItemFont *)_menuChuPai->getChildByTag(1))->setEnabled(isChuPai);//出牌
+	((MenuItemFont *)_menuChuPai->getChildByTag(0))->setEnabled(isBuChu);//不出
 }
 
 void GameScene::OutCard(float dt){

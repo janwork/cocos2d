@@ -77,7 +77,7 @@ bool Player::init(std::string name, int score, bool isHero)
 	back->addChild(_labelPokeCount, 1);
 
 
-	//出牌区
+	//鲁枚脜脝脟酶
 
 	_exhibitionZone = PokeExhibitionZone::create();
 
@@ -147,7 +147,7 @@ void Player::setDiZhu()
 
 void Player::FaPai(GameScene * scene, PokeInfo info)
 {
-	_vecPokeInfo.push_back(info);
+	   _vecPokeInfo.push_back(info);
 
 		if (_isHero)
 		{
@@ -174,7 +174,7 @@ void Player::ShowTipInfo(bool isFollow, CARD_TYPE cardType, unsigned int count, 
 		}
 	}
 
-		//查询
+		//虏茅脩炉
 
 		std::vector<int>& vec = isFollow ? FindFollowCards(cardType, count, value) : FindOutCards();
 	
@@ -222,7 +222,7 @@ void Player::ChuPai(GameScene *scene, bool isFollow, CARD_TYPE cardType, unsigne
 		}
 
 
-		//从手牌中删除
+		//麓脫脢脰脜脝脰脨脡戮鲁媒
 
 		for (int j = 0; j < _vecOutCards.size(); j++)
 		{
@@ -249,7 +249,7 @@ void Player::ChuPai(GameScene *scene, bool isFollow, CARD_TYPE cardType, unsigne
 		}
 		else
 		{
-			for (int i = 0; i < _vecOutCards.size(); i++)
+			for (int i=0; i<vec.size(); i++)
 			{
 				PokeInfo info;
 				info._num = (PokeNum)vec[i];
@@ -309,8 +309,8 @@ void Player::ChuPai(GameScene *scene, bool isFollow, CARD_TYPE cardType, unsigne
 			}
 			else
 			{
-				char str_music[255] = { 0 };
-				sprintf(str_music, "sound/Man/dani%d.ogg", s_index_sound_buyao % 3 + 1);
+				char str_music[255] = {0};
+				sprintf(str_music, "sound/Man/dani%d.ogg", s_index_sound_dani%3 + 1);
 				SimpleAudioEngine::getInstance()->playEffect(str_music);
 				s_index_sound_dani++;
 			}
@@ -342,58 +342,58 @@ void Player::PlayEffectForCards(std::vector<int> & vec)
 
 	switch (vecOutCardsData._type)
 	{
-	case SINGLE_CARD://单牌	
+	case SINGLE_CARD://碌楼脜脝	
 	{
 		char str_music[255] = { 0 };
 		sprintf(str_music, "sound/Man/%d.ogg", vec.at(0) + 1);
 		SimpleAudioEngine::getInstance()->playEffect(str_music);
 	}
 	break;
-	case DOUBLE_CARD://对子
+	case DOUBLE_CARD://露脭脳脫
 	{
 		char str_music[255] = { 0 };
 		sprintf(str_music, "sound/Man/dui%d.ogg", vec.at(0) + 1);
 		SimpleAudioEngine::getInstance()->playEffect(str_music);
 	}
 	break;
-	case THREE_CARD://3不带
+	case THREE_CARD://3虏禄麓酶
 	{
 		char str_music[255] = { 0 };
 		sprintf(str_music, "sound/Man/tuple%d.ogg", vec.at(0) + 1);
 		SimpleAudioEngine::getInstance()->playEffect(str_music);
 	}
 	break;
-	case BOMB_CARD://炸弹
+	case BOMB_CARD://脮篓碌炉
 		SimpleAudioEngine::getInstance()->playEffect("sound/Man/zhadan.ogg");
 		break;
-	case MISSILE_CARD://火箭
+	case MISSILE_CARD://禄冒录媒
 		SimpleAudioEngine::getInstance()->playEffect("sound/Man/wangzha.ogg");
 		break;
-	case THREE_ONE_CARD://3带1
+	case THREE_ONE_CARD://3麓酶1
 		SimpleAudioEngine::getInstance()->playEffect("sound/Man/sandaiyi.ogg");
 		break;
-	case THREE_TWO_CARD://3带2
+	case THREE_TWO_CARD://3麓酶2
 		SimpleAudioEngine::getInstance()->playEffect("sound/Man/sandaiyidui.ogg");
 		break;
-	case BOMB_TWO_CARD://四个带2张单牌
+	case BOMB_TWO_CARD://脣脛赂枚麓酶2脮脜碌楼脜脝
 		SimpleAudioEngine::getInstance()->playEffect("sound/Man/sidaier.ogg");
 		break;
-	case BOME_TWOOO_CARD://四个带2对
+	case BOME_TWOOO_CARD	://鍥涗釜甯?瀵?
 		SimpleAudioEngine::getInstance()->playEffect("sound/Man/sidailiangdui.ogg");
 		break;
-	case CONNECT_CARD://连牌
+	case CONNECT_CARD://脕卢脜脝
 		SimpleAudioEngine::getInstance()->playEffect("sound/Man/shunzi.ogg");
 		break;
-	case COMPANY_CARD://连队
+	case COMPANY_CARD://脕卢露脫
 		SimpleAudioEngine::getInstance()->playEffect("sound/Man/liandui.ogg");
 		break;
-	case AIRCRAFT_CARD://飞机不带
+	case AIRCRAFT_CARD://路脡禄煤虏禄麓酶
 		SimpleAudioEngine::getInstance()->playEffect("sound/Man/feiji.ogg");
 		break;
-	case AIRCRAFT_SINGLE_CARD://飞机带单牌
+	case AIRCRAFT_SINGLE_CARD://路脡禄煤麓酶碌楼脜脝
 		SimpleAudioEngine::getInstance()->playEffect("sound/Man/feiji.ogg");
 		break;
-	case AIRCRAFT_DOUBLE_CARD://飞机带对子
+	case AIRCRAFT_DOUBLE_CARD://路脡禄煤麓酶露脭脳脫
 		SimpleAudioEngine::getInstance()->playEffect("sound/Man/feiji.ogg");
 		break;
 	default:
@@ -527,16 +527,19 @@ std::vector<int>& Player::FindFollowCards(CARD_TYPE cardType, unsigned int count
 		{
 			if (cardType == THREE_ONE_CARD)
 			{
-				for (int j = 0; j < _allCardGroups.size(); j++)
+				if (_allCardGroups[i]._type == THREE_CARD)
 				{
-					if (_allCardGroups[j]._type == SINGLE_CARD)
+					for (int j = 0; j < _allCardGroups.size(); j++)
 					{
-						_vecFindFollowCards.push_back(_allCardGroups[i]._cards[0]);
-						_vecFindFollowCards.push_back(_allCardGroups[i]._cards[0]);
-						_vecFindFollowCards.push_back(_allCardGroups[i]._cards[0]);
-						_vecFindFollowCards.push_back(_allCardGroups[j]._cards[0]);
-						return _vecFindFollowCards;
-
+						if (_allCardGroups[j]._type == SINGLE_CARD)
+						{
+							_vecFindFollowCards.push_back(_allCardGroups[i]._cards[0]);
+							_vecFindFollowCards.push_back(_allCardGroups[i]._cards[0]);
+							_vecFindFollowCards.push_back(_allCardGroups[i]._cards[0]);
+							_vecFindFollowCards.push_back(_allCardGroups[j]._cards[0]);
+							return _vecFindFollowCards;
+	
+						}
 					}
 				}
 			}
@@ -546,7 +549,7 @@ std::vector<int>& Player::FindFollowCards(CARD_TYPE cardType, unsigned int count
 				{
 					for (int j = 0; j < _allCardGroups.size(); j++)
 					{
-						if (_allCardGroups[i]._type == DOUBLE_CARD && _allCardGroups[i]._cards[0] != _allCardGroups[j]._cards[0])
+						if (_allCardGroups[j]._type == DOUBLE_CARD && _allCardGroups[i]._cards[0] != _allCardGroups[j]._cards[0])
 
 
 						_vecFindFollowCards.push_back(_allCardGroups[i]._cards[0]);
@@ -632,16 +635,16 @@ void Player::BuChu()
 
 void Player::ChaiPai()
 {
-	// 牌值
+	// 脜脝脰碌
 
-	//			最小牌基础值	每大一点加一
-	// 单张		0	+	1
-	// 对子		20	+	1
-	// 三带		40	+	1
-	// 单顺		60	+	1
-	// 双顺		80	+	1
-	// 炸弹		100	+	1
-	// 火箭		120
+	//			脳卯脨隆脜脝禄霉麓隆脰碌	脙驴麓贸脪禄碌茫录脫脪禄
+	// 碌楼脮脜		0	+	1
+	// 露脭脳脫		20	+	1
+	// 脠媒麓酶		40	+	1
+	// 碌楼脣鲁		60	+	1
+	// 脣芦脣鲁		80	+	1
+	// 脮篓碌炉		100	+	1
+	// 禄冒录媒		120
 
 	_allCardGroups.clear();
 
@@ -670,8 +673,8 @@ void Player::ChaiPai()
 			if (itor_find_ii != card_ii.end())
 			{
 				auto itor_find_iii = std::find(card_iii.begin(), card_iii.end(), vec_poke[i]);
-
-				if (itor_find_iii != card_iiii.end())
+				// 鎵惧埌浜?
+				if (itor_find_iii != card_iii.end())
 				{
 					card_iiii.push_back(vec_poke[i]);
 				}

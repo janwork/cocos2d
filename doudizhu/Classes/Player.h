@@ -39,13 +39,17 @@ struct CARDS_DATA{
 };
 
 class PokeExhibitionZone : public Sprite{
+
 public:
-	static PokeExhibitionZone* create(){
+
+	static PokeExhibitionZone* create()
+	{
 		PokeExhibitionZone *sprite = new (std::nothrow) PokeExhibitionZone();
 		if (sprite && sprite->init()){
 			sprite->autorelease();
 			return sprite;
 		}
+
 		CC_SAFE_DELETE(sprite);
 		return nullptr;
 	}
@@ -61,7 +65,8 @@ public:
 		return true;
 	}
 
-	void chuPai(std::vector<PokeInfo> arrayIndexs){
+	void chuPai(std::vector<PokeInfo> arrayIndexs)
+	{
 
 		if (arrayIndexs.empty()){
 			auto label_buchu = Sprite::create("buchu.png");
@@ -69,7 +74,19 @@ public:
 		}
 
 
-		for (int i = 0; i < arrayIndexs.size(); ++i){
+		for (int i = 0; i < arrayIndexs.size(); ++i)
+		{
+			auto card = Poke::create(arrayIndexs.at(i));
+			card->setScale(0.5);
+			this->addChild(card, 100 - arrayIndexs.at(i)._num);
+		}
+
+		sortAllChildren();
+
+		int count = _children.size();
+
+
+		for (int i = 0; i < _children.size(); i++){
 			Poke* card = dynamic_cast<Poke*>(_children.at(i));
 			if (card != NULL){
 				card->setPosition(i * 30, 0);
@@ -91,18 +108,14 @@ public:
 	virtual bool init(std::string name, int score, bool isHero);
 
 	void updateCards();
-
 	void clearCards();
 
 	void setDiZhu();
 	bool getIsDiZhu(){ return _isDiZhu; };
 
 	void FaPai(GameScene * scene, PokeInfo info);
-
 	void ChuPai(GameScene* scene, bool isFollow, CARD_TYPE cardType, unsigned int count, unsigned int value);
-
 	void BuChu();
-
 	void ChaiPai();
 
 	void PlayEffectForCards(std::vector<int> & vec);
@@ -112,9 +125,7 @@ public:
 	bool IsQiangDiZhu();
 
 	std::string GetName();
-
 	void SetPlayerID(size_t id);
-
 	size_t GetPlayerID();
 
 	int GetScore();

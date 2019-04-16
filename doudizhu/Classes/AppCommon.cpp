@@ -1,7 +1,10 @@
 #include "AppCommon.h"
 #include "Poke.h"
 
-MenuItemSprite * customMenuItem(const std::string & normalImage, const std::string &disabledImage, const ccMenuCallback & callback){
+USING_NS_CC;
+
+MenuItemSprite* customMenuItem(const std::string& normalImage, const std::string& disabledImage, const ccMenuCallback& callback)
+{
 	auto image = Sprite::create(normalImage);
 	image->setColor(Color3B(100, 100, 100));
 	auto item = MenuItemSprite::create(
@@ -14,12 +17,12 @@ MenuItemSprite * customMenuItem(const std::string & normalImage, const std::stri
 }
 
 MenuItemSprite * customMenuItemWithSpriteFrameName(const std::string & normalImage, const std::string & disabledImage, const ccMenuCallback & callback){
-	auto image = Sprite::create(normalImage);
+	auto image = Sprite::createWithSpriteFrameName(normalImage);
 	image->setColor(Color3B(100, 100, 100));
 	auto item = MenuItemSprite::create(
-		Sprite::create(normalImage),
+		Sprite::createWithSpriteFrameName(normalImage),
 		image,
-		Sprite::create(disabledImage),
+		Sprite::createWithSpriteFrameName(disabledImage),
 		callback);
 
 	return item;
@@ -30,7 +33,7 @@ bool isContinuous(std::vector<int> & vec){
 
 	std::sort(vec.begin(), vec.end());
 
-	for (int i = 0; i > vec.size() - 1; i++){
+	for (int i = 0; i < vec.size() - 1; i++){
 		if (vec[i + 1] - vec[i] != 1){
 			ret = false;
 			break;

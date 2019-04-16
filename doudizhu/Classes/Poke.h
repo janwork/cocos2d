@@ -39,7 +39,7 @@ struct PokeInfo
 	PokeNum _num;
 	PokeTag _tag;
 
-	inline bool operator == (const PokeInfo &pi) const
+	inline bool operator==(const PokeInfo &pi) const
 	{
 		return (this->_num == pi._num && this->_tag == pi._tag);
 	}
@@ -75,15 +75,6 @@ public:
 
 
 	CC_SYNTHESIZE(GameScene *, _gameMain, GameMain);
-
-
-	/*GameScene * getGameMain(){
-		return _gameMain;
-		};
-
-		void setGameMain(GameScene * gameScene){
-		_gameMain = gameScene;
-		};*/
 
 
 	PokeInfo _info;
