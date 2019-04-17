@@ -15,6 +15,7 @@ enum PokeNum
 	NUM_7,
 	NUM_8,
 	NUM_9,
+	NUM_10,
 	NUM_J,
 	NUM_Q,
 	NUM_K,

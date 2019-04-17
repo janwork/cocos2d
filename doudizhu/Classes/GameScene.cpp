@@ -15,25 +15,24 @@ struct PlayerInfo
 
 struct RunTimeData
 {
-	RunTimeData(){
+	RunTimeData()
+	{
 		_isReady = false;
 	}
 
+	bool		_isReady;	
 
-	bool  _isReady;
-
-	PlayerInfo _playerinfo1;
-	PlayerInfo _playerinfo2;
-	PlayerInfo _playerinfo3;
-
+	PlayerInfo	_playerinfo1;
+	PlayerInfo	_playerinfo2;
+	PlayerInfo	_playerinfo3;
 };
 
 
 RunTimeData s_runtimeData;
 
 
-Scene * GameScene::createScene(){
-
+Scene * GameScene::createScene()
+{
 	auto scene = Scene::create();
 
 	auto layer = GameScene::create();
@@ -93,21 +92,20 @@ bool  GameScene::init(){
 	_menuQiangDiZhu = Menu::create();
 	_menuQiangDiZhu->addChild(itemQiang, 2, 0);
 	_menuQiangDiZhu->addChild(itemBuQiang, 2, 1);
-
 	_menuQiangDiZhu->setVisible(false);
 	this->addChild(_menuQiangDiZhu, 1);
 
 	auto itemBuChu = customMenuItem("item_buchu.png", "item_buchu.png", CC_CALLBACK_1(GameScene::menuBuChuCallback, this));
 	itemBuChu->setPosition(50, -50);
-	itemBuChu->setVisible(false);
+	//itemBuChu->setVisible(false);
 
 	auto itemChuPai = customMenuItem("item_chupai.png", "item_chupai.png", CC_CALLBACK_1(GameScene::menuChuPaiCallback, this));
 	itemChuPai->setPosition(250, -50);
-	itemChuPai->setVisible(false);
+	//itemChuPai->setVisible(false);
 
 
 	auto itemTiShi = customMenuItem("item_tishi.png", "item_tishi.png", CC_CALLBACK_1(GameScene::menuTiShiCallback, this));
-	itemTiShi->setVisible(false);
+	//itemTiShi->setVisible(false);
 	itemTiShi->setPosition(-150, -50);
 
 	_menuChuPai = Menu::create();
@@ -117,7 +115,7 @@ bool  GameScene::init(){
 	this->addChild(_menuChuPai, 1);
 
 
-	//_menuChuPai->setVisible(false);
+	_menuChuPai->setVisible(false);
 
 
 	srand(time(0));
@@ -145,10 +143,10 @@ bool  GameScene::init(){
 		s_runtimeData._playerinfo1._name = name_list[name_index_1].asString();
 		s_runtimeData._playerinfo1._score = 5000;
 
-		s_runtimeData._playerinfo2._name = name_list[name_index_3].asString();
+		s_runtimeData._playerinfo2._name = name_list[name_index_2].asString();
 		s_runtimeData._playerinfo2._score = 5000;
 
-		s_runtimeData._playerinfo3._name = name_list[name_index_2].asString();
+		s_runtimeData._playerinfo3._name = name_list[name_index_3].asString();
 		s_runtimeData._playerinfo3._score = 5000;
 
 
@@ -192,13 +190,14 @@ bool  GameScene::init(){
 void GameScene::initCards()
 {
 	_pokeInfo.clear();
-	for (int i = 0; i < 13; i++){
-		for (int j = 0; j < 4; j++){
+	for (int i = 0; i < 13; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
 			PokeInfo info;
 			info._num = (PokeNum)i;
 			info._tag = (PokeTag)j;
 			_pokeInfo.push_back(info);
-
 		}
 	}
 
@@ -216,7 +215,8 @@ void GameScene::initCards()
 static int index_fapai = 0;
 
 
-void GameScene::faPai(){
+void GameScene::faPai()
+{
 
 	index_fapai = 0;
 
@@ -230,7 +230,7 @@ void GameScene::faPai(){
 	this->runAction(seq);
 
 
-	//schedule(schedule_selector(GameScene::OutCard), 0.1);
+	schedule(schedule_selector(GameScene::OutCard), 0.1);
 }
 
 void GameScene::callbackFaPai(Node *node)
@@ -241,6 +241,7 @@ void GameScene::callbackFaPai(Node *node)
 
 		if (index_fapai % 3 == 0)
 		{
+			CCLOG("ÎÒµÄÊÖÅÆ %d", _pokeInfo.at(index_fapai)._num);
 			_player1->FaPai(this, _pokeInfo.at(index_fapai));
 		}
 		else if (index_fapai % 3 == 1)
@@ -268,7 +269,8 @@ void GameScene::callbackFaPai(Node *node)
 	}
 }
 
-void GameScene::FaDiPai(Player* player){
+void GameScene::FaDiPai(Player* player)
+{
 	for (int i = index_fapai; i < 54; i++)
 	{
 		_bottomCardZone->show(_pokeInfo.at(i));
@@ -283,12 +285,14 @@ void GameScene::FaDiPai(Player* player){
 	}
 }
 
-void GameScene::menuBackCallback(Ref* pSender){
+void GameScene::menuBackCallback(Ref* pSender)
+{
 	SimpleAudioEngine::getInstance()->stopBackgroundMusic();
 	Director::getInstance()->replaceScene(MenuScene::createScene());
 }
 
-void GameScene::menuReadyCallback(Ref* pSender){
+void GameScene::menuReadyCallback(Ref* pSender)
+{
 
 	faPai();
 	_menuReady->setVisible(false);
@@ -337,7 +341,8 @@ void GameScene::callbackQiangDiZhu2(Node *node)
 			SimpleAudioEngine::getInstance()->playEffect("sound/Man/Rob1.ogg");
 
 
-			if (!_begin){
+			if (!_begin)
+			{
 				_begin = true;
 			}
 		}
@@ -359,7 +364,7 @@ void GameScene::callbackQiangDiZhu3(Node* node){
 
 	if (!_gameover)
 	{
-	auto delay = DelayTime::create(2);
+	auto delay = DelayTime::create(3);
 	auto callback = CallFuncN::create(CC_CALLBACK_1(GameScene::callbackChuPai3, this));
 	auto seq = Sequence::createWithTwoActions(delay, callback);
 

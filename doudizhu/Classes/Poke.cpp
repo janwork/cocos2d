@@ -98,6 +98,11 @@ bool Poke::init(PokeInfo info, bool isSmall)
 				num = _info._num + 2;
 			}
 
+			if (num == 16)
+			{
+				CCLOG("shabi");
+			}
+
 
 			char strTag[256];
 

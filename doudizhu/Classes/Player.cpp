@@ -18,7 +18,8 @@ Player * Player::create(std::string name, int score, bool isHero)
 bool Player::init(std::string name, int score, bool isHero)
 {
 
-	if (!Sprite::init()){
+	if (!Sprite::init())
+	{
 		return false;
 	}
 
@@ -114,7 +115,7 @@ std::string Player::GetName()
 	return _name;
 }
 
-int  Player::GetScore()
+int Player::GetScore()
 {
 	return _score;
 }
@@ -182,7 +183,8 @@ void Player::ShowTipInfo(bool isFollow, CARD_TYPE cardType, unsigned int count, 
 		{
 			_labelTipInfo->setVisible(true);
 		}
-		else{
+		else
+		{
 			_labelTipInfo->setVisible(false);
 
 
@@ -288,7 +290,8 @@ void Player::ChuPai(GameScene *scene, bool isFollow, CARD_TYPE cardType, unsigne
 
 	CARDS_DATA vecOutCardsData = PanDuanPaiXing(_vecOutCards);
 
-	if (isFollow){
+	if (isFollow)
+	{
 		if (vecOutCardsData._cards.empty())
 		{
 			char str_music[255] = { 0 };
@@ -319,7 +322,8 @@ void Player::ChuPai(GameScene *scene, bool isFollow, CARD_TYPE cardType, unsigne
 	else
 	{
 		std::vector<int> vec;
-		for (int i = 0; i < _vecOutCards.size(); i++){
+		for (int i = 0; i < _vecOutCards.size(); i++)
+		{
 			vec.push_back(_vecOutCards[i]._num);
 		}
 		PlayEffectForCards(vec);
@@ -445,7 +449,8 @@ std::vector<int>& Player::FindOutCards()
 
 	for (int i = 0; i < _allCardGroups.size(); i++)
 	{
-		if (_allCardGroups[i]._type == THREE_CARD){
+		if (_allCardGroups[i]._type == THREE_CARD)
+		{
 			for (int j = 0; j < _allCardGroups.size(); j++)
 			{
 				if (_allCardGroups[j]._type == SINGLE_CARD)
@@ -550,14 +555,14 @@ std::vector<int>& Player::FindFollowCards(CARD_TYPE cardType, unsigned int count
 					for (int j = 0; j < _allCardGroups.size(); j++)
 					{
 						if (_allCardGroups[j]._type == DOUBLE_CARD && _allCardGroups[i]._cards[0] != _allCardGroups[j]._cards[0])
-
-
-						_vecFindFollowCards.push_back(_allCardGroups[i]._cards[0]);
-						_vecFindFollowCards.push_back(_allCardGroups[i]._cards[0]);
-						_vecFindFollowCards.push_back(_allCardGroups[i]._cards[0]);
-						_vecFindFollowCards.push_back(_allCardGroups[j]._cards[0]);
-						_vecFindFollowCards.push_back(_allCardGroups[j]._cards[1]);
-						return _vecFindFollowCards;
+						{
+							_vecFindFollowCards.push_back(_allCardGroups[i]._cards[0]);
+							_vecFindFollowCards.push_back(_allCardGroups[i]._cards[0]);
+							_vecFindFollowCards.push_back(_allCardGroups[i]._cards[0]);
+							_vecFindFollowCards.push_back(_allCardGroups[j]._cards[0]);
+							_vecFindFollowCards.push_back(_allCardGroups[j]._cards[1]);
+							return _vecFindFollowCards;
+						}
 					}
 				}
 			}
@@ -575,8 +580,10 @@ std::vector<int>& Player::FindFollowCards(CARD_TYPE cardType, unsigned int count
 		}
 	}
 
-	for (int i = 0; i < _allCardGroups.size(); i++){
-		if (MISSILE_CARD == _allCardGroups[i]._type){
+	for (int i = 0; i < _allCardGroups.size(); i++)
+	{
+		if (MISSILE_CARD == _allCardGroups[i]._type)
+		{
 			return _allCardGroups[i]._cards;
 		}
 	}

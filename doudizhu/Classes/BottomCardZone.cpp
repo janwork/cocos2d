@@ -50,7 +50,8 @@ void BottomCardZone::show(PokeInfo cardInfo)
 	for (int i = 0; i < _children.size(); i++)
 	{
 	Poke* card = dynamic_cast<Poke*>(_children.at(i));
-	if (card != NULL){
+	if (card != NULL)
+	{
 	card->setPosition(Vec2((i - zeroPoint) * 110, 0));
 	}
 	}
