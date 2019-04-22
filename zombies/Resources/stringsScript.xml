@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plist version="1.0">
+    <dict>
+      <key>shikuai</key>
+      <string>仅需10元，点击确定按钮产生扣费，信息费由合作方代收</string>
+      <key>bakuai</key>
+      <string>仅需8元，点击确定按钮产生扣费，信息费由合作方代收</string>
+      <key>liukuai</key>
+      <string>仅需6元，点击确定按钮产生扣费，信息费由合作方代收</string>
+      <key>sikuai</key>
+        <string>仅需4元，点击确定按钮产生扣费，信息费由合作方代收</string>
+      <key>liangkuai</key>
+        <string>仅需2元，点击确定按钮产生扣费，信息费由合作方代收</string>
+      <key>tel3</key>
+      <string>温馨提示:游戏过程中产生的信息费由合作商代收,客服:4006706603</string>
+         <key>userid</key>
+      <string> 用户ID:</string>
+      <key>userreading</key>
+      <string> 读取中····</string>
+      <key>kefu</key>
+      <string>，客服热线：4006706603。请确定是否购买</string>
+    </dict>
+   
+</plist>
+
+

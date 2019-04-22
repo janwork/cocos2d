@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>0</key>
+	<string>0</string>
+	<key>1</key>
+	<string>1000</string>
+	<key>2</key>
+	<string>400</string>
+	<key>3</key>
+	<string>1000</string>
+	<key>4</key>
+	<string>300</string>
+	<key>5</key>
+	<string>300</string>
+	<key>6</key>
+	<string>400</string>
+	<key>7</key>
+	<string>0</string>
+	<key>8</key>
+	<string>400</string>
+	<key>9</key>
+	<string>1000</string>
+	<key>10</key>
+	<string>0</string>
+	<key>11</key>
+	<string>400</string>
+	<key>12</key>
+	<string>400</string>
+	<key>13</key>
+	<string>1000</string>
+	<key>14</key>
+	<string>600</string>
+	<key>15</key>
+	<string>1000</string>
+	<key>16</key>
+	<string>400</string>
+	<key>17</key>
+	<string>0</string>
+	<key>18</key>
+	<string>400</string>
+	<key>19</key>
+	<string>1000</string>
+</dict>
+</plist>
