@@ -1,6 +1,5 @@
 #include "cocos2d.h"
 
-
 USING_NS_CC;
 
 class UILoadingGameLayer : public LayerColor

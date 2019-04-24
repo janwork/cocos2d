@@ -1,34 +1,49 @@
 #ifndef UISETLAYER_H
 #define UISETLAYER_H
+#include "cocos2d.h"
+#include <iostream>
+
+USING_NS_CC;
+
 
 class UIMainMenuLayer;
 
 class UISetLayer : public Layer
 {
 private:
+	
+
+	//CC_SYNTHESIZE(bool, m_bShowEquipJiaTL, m_bShowEquipJiaTL);
+	//CC_SYNTHESIZE(bool, m_bUpdateUIStore, m_bUpdateUIStore);
+	//CC_SYNTHESIZE(bool, m_bIsShowGameTask, m_bIsShowGameTask);
+	//CC_SYNTHESIZE(bool, m_bStoreBtnEnable, m_bStoreBtnEnable);
+	//CC_SYNTHESIZE(double, m_dLastStackTime, LastStackTime);
+	//CC_SYNTHESIZE(bool, m_bStopSp01Move, StopSp01Move);
+
+
 public:
 	static UISetLayer* shared();
 	static void purgeShared();
 
-	void updateTime(float dt);
+	//void updateTime(float dt);
 
 	int userID;
 	bool shuaxin;
-	void getUserID(int ID);
-	string _IMEI;
-	string _IMSI;
-	string _ICCID;
-	string FileMD5;
-	string SingelCode;
-
-	void setIMEI(string str);
-	void setIMSI(string str);
-	void setICCID(string str);
-	void setFileMD5(string str);
-	void setSingnelCode(string str); 
+	//void getUserID(int ID);
+	std::string _IMEI;
+	std::string _IMSI;
+	std::string _ICCID;
+	std::string FileMD5;
+	std::string SingelCode;
+	/*
+		void setIMEI(std::string str);
+		void setIMSI(std::string str);
+		void setICCID(std::string str);
+		void setFileMD5(std::string str);
+		void setSingnelCode(std::string str);*/
 
 	UIMainMenuLayer *UIMM;
-	void setUIMainMenuLayer(UIMainMenuLayer *uim);
+	/*void setUIMainMenuLayer(UIMainMenuLayer *uim);
 	void replaceToMainMenu();
 	void replaceToGaming();
 	void replaceToPause();
@@ -41,23 +56,23 @@ public:
 	void replaceToGameCG_1();
 	void replaceToGameCG_2();
 	void replaceToGameCG_3();
-	void replaceToGameCG_4();
+	void replaceToGameCG_4();*/
 
-	void sendXinxi();
+	/*void sendXinxi();
 	void onHttpRequestCompleted(Ref* sender, void *data);
 
 	void runHelloWorld();
-	void runUILoadingGameLayer();
-	static Scene* makeScene(Layer *layer);
+	void runUILoadingGameLayer();*/
+	//static Scene* makeScene(Layer *layer);
 
-	void payforBuy(int index);
+	/*void payforBuy(int index);
 	void payOrderSdk(int index);
 	char payname[10];
 	void iapResultSuccess(int shopIndex);
 	void iapResultYiJie(int shopIndex);
 	void iapResultFailed(int shopIndex);
 	void iapResultCancel(int shopIndex);
-	void getComJhtcCf(string name);
+	void getComJhtcCf(std::string name);
 	void requestMusic(bool b);
 	void exitGame();
 	void retainCCSpriteFrameCache_Game2UI();
@@ -66,7 +81,7 @@ public:
 	void retainCGCCSpriteFrameCache();
 	void updateBoom();
 
-	void OpenWindows();
+	void OpenWindows();*/
 
 	int m_nLianJiNum;
 	float PAYID_BUYJIATELIN_TIME;
@@ -113,7 +128,7 @@ public:
 	int m_nShowUIStoreType;
 
 
-	void setWinSpriteFromHeroHurt(Sprite* node, int hurtNum);
+	//void setWinSpriteFromHeroHurt(Sprite* node, int hurtNum);
 
 	int m_nGamingMode;
 
@@ -147,7 +162,7 @@ public:
 
 	void update(float dt);
 
-	bool isLittleLevelUnClock(int difficulty, int bigLevelID, int smallLevelID);
+	/*bool isLittleLevelUnClock(int difficulty, int bigLevelID, int smallLevelID);
 
 	void unClockLittleLevel(int difficulty, int bigLevelID, int smallLevelID);
 
@@ -170,7 +185,7 @@ public:
 	bool isLittleLevelHasGiveJiangli(int difficulty, int bigLevelID, int smallLevelID);
 
 	void setLittleLevelHasGiveJiangli(int difficulty, int bigLevelID, int smallLevelID);
-
+*/
 	//float getValueOfGunAttribute(GunType guntype, int attribute, int secondAttribute);
 
 	//const CString* getValueOfGunAttributeCString(GunType guntype, int attribute, int secondAttribute);
@@ -179,16 +194,35 @@ public:
 
 	//void updateGunAttribute(GunType guntype, int attribute);
 
-	void paddingGunAttribute();
+	//void paddingGunAttribute();
 
 
-	void alterCoinsNum(int num, bool record);
-	void alterZuanShiNum(int num);
+	//void alterCoinsNum(int num, bool record);
+	//void alterZuanShiNum(int num);
 
-	//void unClockGunNeedLevelM()
-	
+	//void unClockGunNeedLevelM(GunType type, int *diff, int *bigL, int*smallL);
+
+private:
+
+	UISetLayer();
+	~UISetLayer();
+	static UISetLayer *m_pSingleInstance;
+	//void initGameData();
+	//void unClockAndBuyAllGun();
+	//void unClockAllLevel();
+
 
 };
+
+
+//#define CHECK_IAP_BTN \
+//if (!UISetLayer::shared()->getm_bStoreBtnEnable() ) \
+//{ \
+//	return;\
+//}else\
+//{\
+//	UISetLayer::shared()->setm_bStoreBtnEnable(false);\
+//}
 
 
 #endif // !UISETLAYER_H
