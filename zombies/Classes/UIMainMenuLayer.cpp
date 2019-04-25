@@ -45,5 +45,10 @@ bool UIMainMenuLayer::init()
 		bRet = true;
 	} while (0);
 
+
+	timeID = 180;
+
+	//m_pBtnStartGame = SpriteButton::
+
 	return true;
 }
