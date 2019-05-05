@@ -8,7 +8,7 @@
 
 
 USING_NS_CC;
-class SpriteButton :public Layer, public RGBAProtocol
+class SpriteButton :public LayerRGBA
 {
 public:
 	SpriteButton();
@@ -18,22 +18,27 @@ public:
 	static SpriteButton* createWithSprite(Sprite* sprite);
 	CREATE_FUNC(SpriteButton);
 
+	//CC_SYNTHESIZE(Color3B, m_tColor, Color);
+	//Color3B m_tColor;
+	//void setColor();
+	//Color3B getColor();
+
 	//virtual void registerWithTouchDispatcher();
-	virtual bool onTouchBegan(Touch *touch, Event *pEvent);
-	virtual void onTouchMoved(Touch *touch, Event *pEvent);
-	virtual void onTouchEnded(Touch *touch, Event *pEvent);
-	virtual void onTouchCancelled(Touch *touch, Event *pEvent);
+	//virtual bool onTouchBegan(Touch *touch, Event *pEvent);
+	//virtual void onTouchMoved(Touch *touch, Event *pEvent);
+	//virtual void onTouchEnded(Touch *touch, Event *pEvent);
+	//virtual void onTouchCancelled(Touch *touch, Event *pEvent);
 
-	virtual void setPressDownHandler(Ref* object, SEL_MenuHandler handle);
-	virtual void setPressUpHandler(Ref* object, SEL_MenuHandler handle);
-	virtual void setPressMoveInsideHandler(Ref* object, SEL_MenuHandler handle);
-	virtual void setPressMoveOutsideHandler(Ref* object, SEL_MenuHandler handle);
+	//virtual void setPressDownHandler(Ref* object, SEL_MenuHandler handle);
+	//virtual void setPressUpHandler(Ref* object, SEL_MenuHandler handle);
+	//virtual void setPressMoveInsideHandler(Ref* object, SEL_MenuHandler handle);
+	//virtual void setPressMoveOutsideHandler(Ref* object, SEL_MenuHandler handle);
 
-	CC_SYNTHESIZE(GLubyte, m_cOpacity, Opacity);
-	CC_PROPERTY_PASS_BY_REF(Color3B, m_tColor, Color);
+	//CC_SYNTHESIZE(GLubyte, m_cOpacity, Opacity);
+	//CC_PROPERTY_PASS_BY_REF(Color3B, m_tColor, Color);
 	//CC_PROPERTY_PASS_BY_REF(Color3B, m_tColor, Color);
 
-	bool m_bIsOpacityModifyRGB;
+	/*bool m_bIsOpacityModifyRGB;
 	bool isOpacityModifyRGB();
 	void setOpacityModifyRGB(bool bOpacityModifyRGB);
 
@@ -44,18 +49,18 @@ public:
 	virtual SpriteFrame* getHighlightFrame();
 
 	virtual void setDisableFrame(SpriteFrame* frame);
-	virtual SpriteFrame* getDisableFrame();
+	virtual SpriteFrame* getDisableFrame();*/
 
-	CC_SYNTHESIZE(bool, m_bZoomInOnHighlight, ZoomInOnHighlight);
+	//CC_SYNTHESIZE(bool, m_bZoomInOnHighlight, ZoomInOnHighlight);
 
-	virtual void cleanup();
+	//virtual void cleanup();
 
-	CC_SYNTHESIZE(bool, m_bEnable, Enable);
-	CC_SYNTHESIZE(Color3B, m_cUnableColor, UnableColor);
+	//CC_SYNTHESIZE(bool, m_bEnable, Enable);
+	//CC_SYNTHESIZE(Color3B, m_cUnableColor, UnableColor);
 
 protected:
 
-	virtual void onPressedDown();
+	/*virtual void onPressedDown();
 	virtual void onPressedUp();
 	virtual void onPressedMoveInside();
 	virtual void onPressedMoveOutside();
@@ -79,14 +84,15 @@ protected:
 	Ref* m_pPressedCancelHandleObject;
 
 	bool m_bTouched;
-	SpriteFrame* m_pFrameNormal;
-	SpriteFrame* m_pFrameHighlight;
-	SpriteFrame* m_pFrameDisable;
 	Sprite* m_pSprite;
 	bool m_bSpriteMode;
 
 	bool isSpriteMode();
-	bool isTouchInside(Touch* pTouch);
+	bool isTouchInside(Touch* pTouch);*/
+	Sprite* m_pSprite;
+	SpriteFrame* m_pFrameNormal;
+	SpriteFrame* m_pFrameHighlight;
+	SpriteFrame* m_pFrameDisable;
 	virtual void initWithFrame(SpriteFrame * frameNormal, SpriteFrame* frameHightlight, SpriteFrame* frameDisable);
 	virtual void initWithSprite(Sprite* sprite);
 
