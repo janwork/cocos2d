@@ -48,8 +48,6 @@ bool UIMainMenuLayer::init()
 
 	timeID = 180;
 
-	//m_pBtnStartGame = SpriteButton::createWithFrame(SpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("kaishi2.png"), NULL, NULL);
-	
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pic/text_ui1.plist", "pic/text_ui1.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pic/text_ui2.plist", "pic/text_ui2.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pic/commonPic.plist", "pic/commonPic.png");
@@ -61,6 +59,14 @@ bool UIMainMenuLayer::init()
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pic/text_common.plist", "pic/text_common.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pic/text_game.plist", "pic/text_game.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pic/ui_store1.plist", "pic/ui_store1.png");
+
+	//m_pBtnStartGame = SpriteButton::createWithFrame(SpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("kaishi2.png"), NULL, NULL);
+	//m_pBtnStartGame = Sprite::createWithSpriteFrameName("kaishi2.png");
+	//SpriteFrame *sf = SpriteFrameCache::getInstance()->getSpriteFrameByName("kaishi2.png");
+	m_pBtnStartGame = Button::create();
+	m_pBtnStartGame->loadTextureNormal("kaishi2.png", Widget::TextureResType::PLIST);
+	m_pBtnStartGame->addClickEventListener(CC_CALLBACK_1(UIMainMenuLayer::onStartGamePressed, this));
+
 
 	Sprite* bgSprite = Sprite::create("pic/fengmianbeijMainmenu.jpg");
 	bgSprite->setPosition(Vec2(400, 240));
@@ -78,9 +84,27 @@ bool UIMainMenuLayer::init()
 	playBg->setPosition(Vec2(650.5, -124));
 	playBg->addChild(playBg, 1);
 
+	//playBg->addChild(m_pBtnStartGame);
+	//m_pBtnStartGame->setPosition(Vec2(playBg->getContentSize().width / 2 - 2, playBg->getContentSize().height / 2 + 60));
+
 	shou = Sprite::createWithSpriteFrameName("gebo1.png");
 	shou->setPosition(Vec2(335.5, 40));
 	this->addChild(shou, 1);
+
+
+	Dictionary* dic = Dictionary::createWithContentsOfFile("stringsScript.xml");
+	String* strchinese = dynamic_cast<String*>(dic->objectForKey("tel3"));
+	LabelTTF* bmFont = LabelTTF::create(strchinese->getCString(), "", 18);
+	bmFont->setPosition(Vec2(Director::getInstance()->getWinSize().width* 0.55, 55));
+	addChild(bmFont, 22);
+
+	String* uid = dynamic_cast<String*>(dic->objectForKey("userid"));
+	LabelTTF* username = LabelTTF::create(uid->getCString(), "", 18);
+	username->setPosition(Vec2(Director::getInstance()->getWinSize().width* 0.55 - 100, 35));
+	addChild(username, 22);
+
+	runAction(Sequence::create(DelayTime::create(0.5f), CallFunc::create(this, callfunc_selector(UIMainMenuLayer::TanChuLibao)), NULL));
+
 
 	return true;
 }
@@ -106,6 +130,16 @@ void UIMainMenuLayer::biaotiActionCallBack(Node* node)
 }
 
 void UIMainMenuLayer::playBgDoneCallBack(Node* node)
+{
+
+}
+
+void UIMainMenuLayer::onStartGamePressed(Object* pSender)
+{
+
+}
+
+void UIMainMenuLayer::TanChuLibao()
 {
 
 }

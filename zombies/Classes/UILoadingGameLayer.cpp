@@ -28,14 +28,6 @@ bool UILoadingGameLayer::init()
 		scheduleUpdate();
 		bRet = true;
 
-		//Scene* m_pMainMenu = Scene::create();
-		//m_pMainMenu->addChild(UIMainMenuLayer::create());
-
-		//TransitionScene * ss = TransitionScene::create(0.8f, m_pMainMenu);
-		//Director::getInstance()->replaceScene(ss);
-
-
-
 	} while (0);
 
 	return bRet;

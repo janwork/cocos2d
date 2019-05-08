@@ -4,11 +4,8 @@
 #ifndef SPRITEBUTTON_H
 #define SPRITEBUTTON_H
 
-
-
-
 USING_NS_CC;
-class SpriteButton :public LayerRGBA
+class SpriteButton :public Layer, public RGBAProtocol
 {
 public:
 	SpriteButton();
@@ -16,51 +13,61 @@ public:
 	virtual bool init();
 	static SpriteButton* createWithFrame(SpriteFrame * frameNormal, SpriteFrame* frameHightlight, SpriteFrame* frameDisable);
 	static SpriteButton* createWithSprite(Sprite* sprite);
-	CREATE_FUNC(SpriteButton);
-
-	//CC_SYNTHESIZE(Color3B, m_tColor, Color);
-	//Color3B m_tColor;
-	//void setColor();
-	//Color3B getColor();
 
 	//virtual void registerWithTouchDispatcher();
-	//virtual bool onTouchBegan(Touch *touch, Event *pEvent);
-	//virtual void onTouchMoved(Touch *touch, Event *pEvent);
-	//virtual void onTouchEnded(Touch *touch, Event *pEvent);
-	//virtual void onTouchCancelled(Touch *touch, Event *pEvent);
+	virtual bool onTouchBegan(Touch *touch, Event *pEvent);
+	virtual void onTouchMoved(Touch *touch, Event *pEvent);
+	virtual void onTouchEnded(Touch *touch, Event *pEvent);
+	virtual void onTouchCancelled(Touch *touch, Event *pEvent);
 
-	//virtual void setPressDownHandler(Ref* object, SEL_MenuHandler handle);
-	//virtual void setPressUpHandler(Ref* object, SEL_MenuHandler handle);
-	//virtual void setPressMoveInsideHandler(Ref* object, SEL_MenuHandler handle);
-	//virtual void setPressMoveOutsideHandler(Ref* object, SEL_MenuHandler handle);
+	virtual void setPressDownHandler(Ref* object, SEL_MenuHandler handle);
+	virtual void setPressUpHandler(Ref* object, SEL_MenuHandler handle);
+	virtual void setPressMoveInsideHandler(Ref* object, SEL_MenuHandler handle);
+	virtual void setPressMoveOutsideHandler(Ref* object, SEL_MenuHandler handle);
 
-	//CC_SYNTHESIZE(GLubyte, m_cOpacity, Opacity);
-	//CC_PROPERTY_PASS_BY_REF(Color3B, m_tColor, Color);
-	//CC_PROPERTY_PASS_BY_REF(Color3B, m_tColor, Color);
+	//RBGAProtocol
+	CC_PROPERTY(GLubyte, m_cOpacity, Opacity);
+	CC_PROPERTY_PASS_BY_REF(Color3B, m_tColor, Color);
 
-	/*bool m_bIsOpacityModifyRGB;
-	bool isOpacityModifyRGB();
-	void setOpacityModifyRGB(bool bOpacityModifyRGB);
 
+	bool m_bIsOpacityModifyRGB;
+	virtual bool isOpacityModifyRGB()const;
+	virtual void setOpacityModifyRGB(bool bOpacityModifyRGB);
+
+	virtual GLubyte getDisplayedOpacity() const;
+	virtual void updateDisplayedOpacity(GLubyte parentOpacity);
+	virtual bool isCascadeOpacityEnabled() const;
+	
+	virtual const Color3B& getDisplayedColor() const;
+	virtual void updateDisplayedColor(const Color3B& parentColor);
+	virtual bool isCascadeColorEnabled() const;
+
+	virtual  void setCascadeColorEnabled(bool cascadeColorEnabled);
+	virtual  void setCascadeOpacityEnabled(bool cascadeOpacityEnabled);
+
+
+	// frame getter
 	virtual void setNormalFrame(SpriteFrame* frame);
 	virtual SpriteFrame* getNormalFrame();
-
 	virtual void setHighlightFrame(SpriteFrame* frame);
 	virtual SpriteFrame* getHighlightFrame();
-
 	virtual void setDisableFrame(SpriteFrame* frame);
-	virtual SpriteFrame* getDisableFrame();*/
+	virtual SpriteFrame* getDisableFrame();
 
-	//CC_SYNTHESIZE(bool, m_bZoomInOnHighlight, ZoomInOnHighlight);
+	CC_PROPERTY(bool, m_bZoomInOnHighlight, ZoomInOnHighlight);
 
-	//virtual void cleanup();
+	virtual void cleanup();
 
-	//CC_SYNTHESIZE(bool, m_bEnable, Enable);
-	//CC_SYNTHESIZE(Color3B, m_cUnableColor, UnableColor);
+	CC_PROPERTY(bool, m_bEnable, Enable);
+	CC_PROPERTY(Color3B, m_cUnableColor, UnableColor);
+
+	CREATE_FUNC(SpriteButton);
+
+	
 
 protected:
 
-	/*virtual void onPressedDown();
+	virtual void onPressedDown();
 	virtual void onPressedUp();
 	virtual void onPressedMoveInside();
 	virtual void onPressedMoveOutside();
@@ -84,11 +91,10 @@ protected:
 	Ref* m_pPressedCancelHandleObject;
 
 	bool m_bTouched;
-	Sprite* m_pSprite;
 	bool m_bSpriteMode;
 
 	bool isSpriteMode();
-	bool isTouchInside(Touch* pTouch);*/
+	bool isTouchInside(Touch* pTouch);
 	Sprite* m_pSprite;
 	SpriteFrame* m_pFrameNormal;
 	SpriteFrame* m_pFrameHighlight;
