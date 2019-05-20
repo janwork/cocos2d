@@ -25,6 +25,19 @@ bool SpriteButton::init()
 	if (!Layer::init())
 		return false;
 	setTouchEnabled(true);
+
+	//this->setTouchMode(Touch::DispatchMode::ONE_BY_ONE);
+
+	//auto listener = EventListenerTouchOneByOne::create();
+	////listener->setSwallowTouches(true);
+	//CCLOG("<janlog> SpriteButton init");
+	//listener->onTouchBegan = CC_CALLBACK_2(SpriteButton::onTouchBegan, this);
+	//listener->onTouchMoved = CC_CALLBACK_2(SpriteButton::onTouchMoved, this);
+	//listener->onTouchEnded = CC_CALLBACK_2(SpriteButton::onTouchEnded, this);
+	//listener->onTouchCancelled = CC_CALLBACK_2(SpriteButton::onTouchCancelled, this);
+
+	//_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
 	ignoreAnchorPointForPosition(false);
 }
 
@@ -107,6 +120,8 @@ void SpriteButton::setPressMoveOutsideHandler(Ref* object, SEL_MenuHandler handl
 
 bool SpriteButton::onTouchBegan(Touch *touch, Event *pEvent)
 {
+	CCLOG(" SpriteButton::onTouchBegan ");
+
 	m_bTouched = false;
 
 	if (!m_bEnable)
@@ -277,6 +292,17 @@ void SpriteButton::setColor(const Color3B & color)
 {
 	m_tColor = color;
 
+
+	for (int i = 0; i < getChildren().size(); i++)
+	{
+		RGBAProtocol* pNode = dynamic_cast<RGBAProtocol*>(getChildren().at(i));
+		if (pNode)
+		{
+			pNode->setColor(m_tColor);
+		}
+	}
+
+
 	//Object* child;
 	//Array* children = this->getChildren();
 
@@ -298,16 +324,14 @@ const Color3B&  SpriteButton::getColor() const
 void SpriteButton::setOpacity(GLubyte opacity)
 {
 	m_cOpacity = opacity;
-	Object* child;
-	/*Array* children = getChildren();
-	CCARRAY_FOREACH(children, child)
+	for (int i = 0; i < getChildren().size(); i++)
 	{
-		RGBAProtocol* pNode = dynamic_cast<RGBAProtocol*>(child);
+		RGBAProtocol* pNode = dynamic_cast<RGBAProtocol*>(getChildren().at(i));
 		if (pNode)
 		{
 			pNode->setOpacity(opacity);
 		}
-	}*/
+	}
 }
 
 GLubyte SpriteButton::getOpacity() const
@@ -319,6 +343,15 @@ void SpriteButton::setOpacityModifyRGB(bool bOpacityModifyRGB)
 {
 	m_bIsOpacityModifyRGB = bOpacityModifyRGB;
 	Object* child;
+
+	for (int i = 0; i < getChildren().size(); i++)
+	{
+		RGBAProtocol* pNode = dynamic_cast<RGBAProtocol*>(getChildren().at(i));
+		if (pNode)
+		{
+			pNode->setOpacityModifyRGB(bOpacityModifyRGB);
+		}
+	}
 	/*Array* children = getChildren();
 	CCARRAY_FOREACH(children, child)
 	{

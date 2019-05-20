@@ -26,6 +26,7 @@ public:
 	void menuCloseCallback(Object* pSender);
 	void setGamePressed(Object* obj);
 	void aboutPressed(Object* obj);
+	void onStorePressed(Object* obj);
 	void helpPressed(Object* obj);
 	void huodongPressed(Object* obj);
 
@@ -34,8 +35,14 @@ public:
 	void TanChuLibao();
 
 
-	//SpriteButton* m_pBtnStartGame;
-	Button* m_pBtnStartGame;
+	virtual bool onTouchBegan(Touch *touch, Event *pEvent);
+	virtual void onTouchMoved(Touch *touch, Event *pEvent);
+	virtual void onTouchEnded(Touch *touch, Event *pEvent);
+	virtual void onTouchCancelled(Touch *touch, Event *pEvent);
+
+
+	SpriteButton* m_pBtnStartGame;
+	//Button* m_pBtnStartGame;
 	//Sprite* m_pBtnStartGame;
 	Sprite* playBg;
 	Sprite* shou;

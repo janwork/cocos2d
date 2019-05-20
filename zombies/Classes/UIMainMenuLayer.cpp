@@ -13,42 +13,63 @@ UIMainMenuLayer::~UIMainMenuLayer()
 
 Scene* UIMainMenuLayer::scene()
 {
-	Scene* scene = NULL;
 
-	do 
-	{
 
-		scene = Scene::create();
+	Scene*	scene = Scene::create();
 
-		CC_BREAK_IF(!scene);
+	//CC_BREAK_IF(!scene);
 
-		UIMainMenuLayer *layer = UIMainMenuLayer::create();
+	UIMainMenuLayer *layer = UIMainMenuLayer::create();
 
-		CC_BREAK_IF(!layer);
+	/*CC_BREAK_IF(!layer);*/
 
-		scene->addChild(layer);
-
-	} while (0);
-
+	scene->addChild(layer);
 
 	return scene;
 }
 
 bool UIMainMenuLayer::init()
 {
-	bool bRet = false;
 
-	do 
-	{
-		CC_BREAK_IF(!Layer::init());
-
-		bRet = true;
-	} while (0);
+	if (!Layer::init()){
+		return false;
+	}
 
 
 	timeID = 180;
 
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pic/text_ui1.plist", "pic/text_ui1.png");
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->setSwallowTouches(false);
+	CCLOG("<janlog> UIMainMenuLayer init");
+
+	listener->onTouchBegan = [](Touch* touch, Event* event){
+		CCLOG("touch began");
+		return true;//一定要返回true ，否则后面的事件会监听不到
+	};
+	listener->onTouchMoved = [](Touch* touch, Event* event){
+		CCLOG("touch moved");
+		Vec2 v = touch->getLocation();
+		CCLOG("%f %f", v.x, v.y);
+
+	};
+	listener->onTouchEnded = [=](Touch* touch, Event* event){
+		CCLOG("touch ended");
+	};
+
+	/*listener->onTouchBegan = CC_CALLBACK_2(UIMainMenuLayer::onTouchBegan, this);
+	listener->onTouchMoved = CC_CALLBACK_2(UIMainMenuLayer::onTouchMoved, this);
+	listener->onTouchEnded = CC_CALLBACK_2(UIMainMenuLayer::onTouchEnded, this);
+	listener->onTouchCancelled = CC_CALLBACK_2(UIMainMenuLayer::onTouchCancelled, this);*/
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
+
+	this->setContentSize(Size(Director::getInstance()->getWinSize().width, Director::getInstance()->getWinSize().height));
+
+
+	//this->setTouchEnabled(true);
+
+	/*SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pic/text_ui1.plist", "pic/text_ui1.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pic/text_ui2.plist", "pic/text_ui2.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pic/commonPic.plist", "pic/commonPic.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pic/pic_In_gameUI.plist", "pic/pic_In_gameUI.png");
@@ -60,12 +81,15 @@ bool UIMainMenuLayer::init()
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pic/text_game.plist", "pic/text_game.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pic/ui_store1.plist", "pic/ui_store1.png");
 
-	//m_pBtnStartGame = SpriteButton::createWithFrame(SpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("kaishi2.png"), NULL, NULL);
-	//m_pBtnStartGame = Sprite::createWithSpriteFrameName("kaishi2.png");
-	//SpriteFrame *sf = SpriteFrameCache::getInstance()->getSpriteFrameByName("kaishi2.png");
-	m_pBtnStartGame = Button::create();
-	m_pBtnStartGame->loadTextureNormal("kaishi2.png", Widget::TextureResType::PLIST);
-	m_pBtnStartGame->addClickEventListener(CC_CALLBACK_1(UIMainMenuLayer::onStartGamePressed, this));
+	m_pBtnStartGame = SpriteButton::createWithFrame(SpriteFrameCache::getInstance()->spriteFrameByName("kaishi2.png"), NULL, NULL);
+	m_pBtnStartGame->setZoomInOnHighlight(true);
+	m_pBtnStartGame->setPressUpHandler(this, menu_selector(UIMainMenuLayer::onStartGamePressed));
+
+	SpriteButton* quitButton = SpriteButton::createWithFrame(SpriteFrameCache::getInstance()->spriteFrameByName("fanhui.png"), NULL, NULL);
+	quitButton->setZoomInOnHighlight(true);
+	quitButton->setPosition(Vec2(72, 40));
+	quitButton->setPressUpHandler(this, menu_selector(UIMainMenuLayer::menuCloseCallback));
+	addChild(quitButton, 1);
 
 
 	Sprite* bgSprite = Sprite::create("pic/fengmianbeijMainmenu.jpg");
@@ -77,15 +101,18 @@ bool UIMainMenuLayer::init()
 	this->addChild(qianghun, 1);
 	qianghun->setScale(0.001);
 
+	playBg = Sprite::create("pic/ui_store1/kaishi1.png");
+	playBg->setPosition(Vec2(650.5, -124));
+	this->addChild(playBg, 1);
+	
+
 	CallFuncN* down1 = CallFuncN::create(this, callfuncN_selector(UIMainMenuLayer::biaotiActionCallBack));
 	qianghun->runAction(Sequence::create(ScaleTo::create(0.3f, 1.3f), ScaleTo::create(0.2f, 0.95f), ScaleTo::create(0.1f, 1), down1, NULL));
 
-	playBg = Sprite::createWithSpriteFrameName("kaishi1.png");
-	playBg->setPosition(Vec2(650.5, -124));
-	playBg->addChild(playBg, 1);
-
-	//playBg->addChild(m_pBtnStartGame);
-	//m_pBtnStartGame->setPosition(Vec2(playBg->getContentSize().width / 2 - 2, playBg->getContentSize().height / 2 + 60));
+	
+	m_pBtnStartGame->setPosition(Vec2(playBg->getContentSize().width / 2 - 2, playBg->getContentSize().height / 2 + 60));
+	playBg->addChild(m_pBtnStartGame);
+	
 
 	shou = Sprite::createWithSpriteFrameName("gebo1.png");
 	shou->setPosition(Vec2(335.5, 40));
@@ -104,6 +131,7 @@ bool UIMainMenuLayer::init()
 	addChild(username, 22);
 
 	runAction(Sequence::create(DelayTime::create(0.5f), CallFunc::create(this, callfunc_selector(UIMainMenuLayer::TanChuLibao)), NULL));
+*/
 
 
 	return true;
@@ -111,35 +139,89 @@ bool UIMainMenuLayer::init()
 
 void UIMainMenuLayer::biaotiActionCallBack(Node* node)
 {
-	CallFuncN* down1 = CallFuncN::create(this, callfuncN_selector(UIMainMenuLayer::playBgDoneCallBack));
+	CCCallFuncN* down1 = CCCallFuncN::create(this, callfuncN_selector(UIMainMenuLayer::playBgDoneCallBack));
 	playBg->setScale(0.9f);
-	playBg->runAction(Sequence::create(Spawn::create(ScaleTo::create(0.4f, 1.0f), EaseBackInOut::create(MoveTo::create(0.4f, Vec2(650.5, 94.5))), NULL), down1,NULL));
-
-
+	playBg->runAction(CCSequence::create(CCSpawn::create(CCScaleTo::create(0.4f, 1.0f), CCEaseBackOut::create(CCMoveTo::create(0.4f, ccp(650.5, 480 - 370.5 - 15))), NULL), down1, NULL));
 	this->runAction(Sequence::create(
-		MoveTo::create(0.25f, Vec2(this->getPositionX(), this->getPositionY() + 2)),
-		MoveTo::create(0.05f, Vec2(this->getPositionX(), this->getPositionY() - 2)),
-		NULL));
+			MoveTo::create(0.25f, Vec2(this->getPositionX(), this->getPositionY() + 2)),
+			MoveTo::create(0.05f, Vec2(this->getPositionX(), this->getPositionY() - 2)),
+			NULL));
 
 
-	ParticleSystem * mypat = ParticleSystemQuad::create("particle/uimainmanu_unearth2.plist");
+	ParticleSystem *mypat = ParticleSystemQuad::create("particle/uimainmanu_unearth2.plist");
 	mypat->setAutoRemoveOnFinish(true);
 	mypat->setPosition(Vec2(480, -20));
 	this->addChild(mypat, 10);
-
 }
 
 void UIMainMenuLayer::playBgDoneCallBack(Node* node)
 {
+	CallFunc* down2 = CallFunc::create([=]{
+
+		CCLOG("UIMainMenuLayer::playBgDoneCallBac");
+		SpriteButton* setButton = SpriteButton::createWithFrame(SpriteFrameCache::getInstance()->spriteFrameByName("an_shezhi.png"), NULL, NULL);
+
+		setButton->setZoomInOnHighlight(true);
+		setButton->setPosition(Vec2(50, 440));
+		setButton->setPressUpHandler(this, menu_selector(UIMainMenuLayer::setGamePressed));
+		addChild(setButton, 100);
+
+
+		SpriteButton* storeButton = SpriteButton::createWithFrame(SpriteFrameCache::getInstance()->spriteFrameByName("an_gouwuche.png"), NULL, NULL);
+		storeButton->setZoomInOnHighlight(true);
+		storeButton->setPosition(Vec2(50, 365));
+		storeButton->setPressUpHandler(this, menu_selector(UIMainMenuLayer::onStorePressed));
+
+		addChild(storeButton, 100);
+	});
+
+	playBg->runAction(Sequence::create(Spawn::create(ScaleTo::create(0.4f, 1.0f), EaseBackOut::create(MoveTo::create(0.4f, Vec2(650.5, 94.5))), NULL), down2, NULL));
 
 }
 
 void UIMainMenuLayer::onStartGamePressed(Object* pSender)
 {
+	CCLOG("onStartGamePressed");
+}
 
+void UIMainMenuLayer::onStorePressed(Object* pSender)
+{
+	CCLOG("onStorePressed");
+}
+
+
+void  UIMainMenuLayer::menuCloseCallback(Object* pSender)
+{
+	CCLOG("menuCloseCallback");
+}
+
+void  UIMainMenuLayer::setGamePressed(Object* obj)
+{
+	CCLOG("setGamePressed");
 }
 
 void UIMainMenuLayer::TanChuLibao()
 {
 
+}
+
+bool UIMainMenuLayer::onTouchBegan(Touch *touch, Event *pEvent)
+{
+	CCLOG(" UIMainMenuLayer::onTouchBegan ");
+
+	return true;
+
+}
+
+void UIMainMenuLayer::onTouchMoved(Touch *touch, Event *pEvent)
+{
+}
+
+void UIMainMenuLayer::onTouchEnded(Touch *touch, Event *pEvent)
+{
+	
+}
+
+void UIMainMenuLayer::onTouchCancelled(Touch *touch, Event *pEvent)
+{
 }

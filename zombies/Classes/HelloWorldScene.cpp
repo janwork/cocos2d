@@ -62,6 +62,29 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
 
+
+	//this->setTouchEnabled(true);
+
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->setSwallowTouches(true);
+	CCLOG("<janlog> HelloWorld init");
+
+	listener->onTouchBegan = [](Touch* touch, Event* event){
+		CCLOG("touch began");
+		return true;//一定要返回true ，否则后面的事件会监听不到
+	};
+	listener->onTouchMoved = [](Touch* touch, Event* event){
+		CCLOG("touch moved");
+		Vec2 v = touch->getLocation();
+		CCLOG("%f %f", v.x, v.y);
+
+	};
+	listener->onTouchEnded = [=](Touch* touch, Event* event){
+		CCLOG("touch ended");
+	};
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
     auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
     if (label == nullptr)
     {
